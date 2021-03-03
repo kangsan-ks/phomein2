@@ -866,6 +866,7 @@
 .search_list .board_list li .item_title{font-size: 20px; font-weight: 500;}
 .search_list .board_list li .date{font-size: 15px;}
 .search_list .board_list li .contents{margin-top: 20px;}
+.search_list .board_list li .contents .tx_ec2{height: 3.6em;line-height: 1.2em;overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;}
 .search_list .board_list li .contents a{font-size: 15px; margin-top: 20px; display: block;}
 .search_list .board_list li .no_data{padding: 20px 0; text-align: center; font-size: 14px;}
 
