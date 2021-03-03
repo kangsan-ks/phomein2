@@ -1,0 +1,35 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<meta name="Description" content="쌀국수는 포메인! 한국식 베트남 쌀국수 전문점. 쌀국수, 월남쌈 등 메뉴 소개, 가맹점 개설 안내.">
+<meta name="Author" content="만든이">
+<meta name="Keywords" content="키워드">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta property="og:title" content="포메인">
+<meta property="og:type" content="website">
+<meta property="og:url" content="http://www.phomein.com">
+<meta property="og:image" content="http://www.phomein.com/common/images/logo.gif">
+<meta property="og:description" content="쌀국수는 포메인! 한국식 베트남 쌀국수 전문점. 쌀국수, 월남쌈 등 메뉴 소개, 가맹점 개설 안내.">
+<script type="text/javascript" language="JavaScript">
+var uAgent = navigator.userAgent.toLowerCase();
+//아래는 모바일 장치들의 모바일 페이지 접속을위한 스크립트
+var mobilePhones = new Array('iphone', 'ipod', 'ipad', 'android', 'blackberry', 'windows ce','nokia', 'webos', 'opera mini', 'sonyericsson', 'opera mobi', 'iemobile');
+for (var i = 0; i < mobilePhones.length; i++){
+	if (uAgent.indexOf(mobilePhones[i]) != -1){
+		location.href="/meng/main/main.do";
+	}
+};
+</script>
+<link rel="canonical" href="http://www.phomein.com/m/">
+<link rel="shortcut icon" type="image/x-icon" href="/eng/images/common/favicon.ico?v=1">
+<link rel="icon" href="/eng/images/common/favicon.png?v=1">
+<link rel="stylesheet" href="/eng/common/css/style.css" media="all">
+<link rel="stylesheet" href="/eng/common/css/swiper.min.css"> <!-- 20190308 추가 -->
+<link rel="stylesheet" href="/eng/common/css/jquery.fullpage.css">
+<script src="/eng/common/js/jquery.js"></script>
+<script src="/eng/common/js/jquery.easing.1.3.js"></script>
+<script src="/eng/common/js/jquery-ui.min.js"></script>
+<script src="/eng/common/js/slick.js"></script>
+<!--[if lte IE 9]>
+	<script src="../common/js/placeholders.min.js"></script>
+	<script src="../common/js/html5.js"></script>
+<![endif]-->

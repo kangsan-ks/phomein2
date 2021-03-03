@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.site.service.impl.ManagerMapper">
+
+
+	<sql id="getSearch">
+		<if test="useyn != null and useyn != ''">
+	        <choose>
+	            <when test="useyn == 0">
+	            </when>
+	            <when test="useyn == 1">
+	            	AND useyn = 'Y'
+	            </when>
+	            <when test="useyn == 2">
+	            	AND useyn = 'N'
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="admintype != null and admintype != ''">
+	        <choose>
+	            <when test="admintype == 0">
+	            </when>
+	            <when test="admintype == 1">
+	            	AND admintype = '111201'
+	            </when>
+	            <when test="admintype == 2">
+	            	AND admintype = '111202'
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="bu != null and bu != ''">
+	        <choose>
+	            <when test="bu == '112201'">
+	            	AND bu = '112201'
+	            </when>
+	            <when test="bu == '112202'">
+	            	AND bu = '112202'
+	            </when>	
+	            <when test="bu == '112203'">
+	            	AND bu = '112203'
+	            </when>
+	            <when test="bu == '112204'">
+	            	AND bu = '112204'
+	            </when>
+	            <when test="bu == '112205'">
+	            	AND bu = '112205'
+	            </when>
+	            <when test="bu == '112206'">
+	            	AND bu = '112206'
+	            </when>
+	            <when test="bu == '112207'">
+	            	AND bu = '112207'
+	            </when>
+	            <otherwise>
+	            	AND bu = ${bu}
+	            </otherwise>
+			</choose>
+		</if>
+		<if test="store != null and store != ''">
+			AND storename like CONCAT('%' ,  #{store}  , '%') 
+		</if>
+		<if test="searchKeyword != null and searchKeyword != ''">
+			AND ( adminid like CONCAT('%' , #{searchKeyword} , '%') OR name like CONCAT('%' , #{searchKeyword} , '%') ) 
+		</if>
+	</sql>	
+	
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_admin A 
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+	</select>	
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq, 
+				adminid, adminpw, admintype,
+				bu, (select name from tb_store where seq = store) as store, name, hp1, hp2, hp3, email1, email2,
+				useyn, regdt, logindt , menu
+			FROM tb_admin 
+        ]]>
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectView" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			seq, adminid, adminpw, admintype,
+			bu, store, storename,
+			name, hp1, hp2, hp3, email1, email2,
+			useyn, regdt, logindt , menu
+		FROM tb_admin
+		WHERE seq = #{seq}
+	</select>
+	
+	<select id="selectViewById" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			seq, adminid, adminpw, admintype,
+			bu, store, storename,
+			name, hp1, hp2, hp3, email1, email2,
+			useyn, regdt, logindt , menu
+		FROM tb_admin
+		WHERE adminid = #{adminid}
+	</select>
+	
+	<insert id="insert" parameterType="hashmap">
+		Insert into tb_admin ( 
+				adminid, adminpw, admintype,
+				bu, store, storename, name, hp1, hp2, hp3, email1, email2,
+				useyn, regdt, logindt, menu  )
+		    values
+		    (	#{adminid}, #{adminpw}, #{admintype},
+		    	#{bu}, #{storeseq}, #{store}, #{name}, #{hp1}, #{hp2}, #{hp3}, #{email1}, #{email2}, 
+		    	 #{useyn}, now(), null , #{menu} )
+	</insert>
+	
+	
+	<update id="update" parameterType="hashmap">
+		Update tb_admin set
+			admintype = #{admintype},
+			<if test="bu != null and bu != ''">
+			bu = #{bu}, 
+			</if>
+			store = #{storeseq}, 
+			storename = #{store}, 
+			name = #{name}, 
+			hp1 = #{hp1}, 
+			hp2 = #{hp2}, 
+			hp3 = #{hp3}, 
+			email1 = #{email1}, 
+			email2 = #{email2},
+			useyn = #{useyn},
+			menu = #{menu}
+		where 
+			seq = #{seq}
+	</update>
+		
+
+	<delete id="delete" parameterType="hashmap">
+		Delete from tb_admin
+		Where seq = #{seq}
+	</delete>
+
+	<update id="managerPW" parameterType="hashmap">
+		update tb_admin set
+			adminpw = #{adminpw}
+		where 
+			seq = #{seq}
+			and adminid = #{adminid}
+	</update>
+	
+	
+	<select id="selectDup" parameterType="hashmap" resultType="int">
+		SELECT 
+			count(adminid) as cnt 
+		FROM tb_admin
+		WHERE adminid = #{adminid}
+	</select>	
+	
+	<update id="updateUseYn" parameterType="hashmap">
+        <![CDATA[
+        	UPDATE tb_admin
+        	SET useyn = #{useyn}
+        	WHERE seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+    
+
+</mapper>

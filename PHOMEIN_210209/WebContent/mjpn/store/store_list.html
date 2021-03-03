@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<meta name="keywords" content="">
+<title>포메인</title>
+<link rel="stylesheet" type="text/css" href="../common/css/font.css">
+<link rel="stylesheet" type="text/css" href="../common/css/common.css">
+<link rel="stylesheet" type="text/css" href="../common/css/layout.css">
+<link rel="stylesheet" type="text/css" href="../common/css/content.css">
+<!--[if lt IE 9]>
+	<script src="../common/js/placeholders.min.js"></script>
+	<script src="../common/js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+<!-- wrap -->
+<div id="wrap">
+	<!-- skip nav -->
+	<div id="skip_nav">
+        <a href="#content">본문 바로가기</a>
+    </div>
+    <!-- //skip nav -->
+	<!-- header -->
+	<header id="header">
+		<h1>
+			<a href="#none"><span class="blind">PHOMEIN</span></a>
+		</h1>
+		<div class="allmenu">
+			<button type="button" class="btn_allmenu"><span class="blind">All Menu</span></button>
+		</div>
+	</header>
+	<!-- //header -->
+	<!-- gnb -->
+	<div id="gnb">
+	</div> 
+	<!-- //gnb -->
+	<!-- container -->
+	<div id="container">
+		<!-- sub visual -->
+		<div class="sub_visual sv3">
+			<!--<h3></h3>-->
+		</div>
+		<!-- 상단비쥬얼 영역
+			PHOMEIN   : class="sub_visual sv1"
+			MENU	  : class="sub_visual sv2"
+			STORE 	  : class="sub_visual sv3"
+			COMMUNITY : class="sub_visual sv4"
+			FRANCHISE : class="sub_visual sv5"
+		-->
+		<!-- //sub visual -->
+		<!-- lnb -->
+		<div class="lnb">
+			<div class="dep dep1">
+				<a href="#none">STORE</a>
+				<ul class="dep_list">
+					<li><a href="#none">PHOMEIN</a></li>
+					<li><a href="#none">メニュー</a></li>
+					<li><a href="#none">STORE</a></li>
+					<li><a href="#none">コミュニティ</a></li>
+					<li><a href="#none">FRANCHISE</a></li>
+				</ul>
+			</div>
+			<div class="dep dep2">
+				<a href="#none">매장찾기</a>
+				<ul class="dep_list">
+					<li><a href="#none">매장찾기</a></li>
+				</ul>
+			</div>
+		</div> 
+		<!-- //lnb -->
+		<!-- content -->
+		<div id="content" class="store pd0">
+			<!-- 지도영역 : 개발시 삭제 -->
+			<div><img src="../common/images/@temp/img_map.jpg" ait="" style="width:100%;height:100%;"></div>
+			<!-- //지도영역 : 개발시 삭제 -->
+			<!-- 마커 표시 -->
+			<div class="marker_1" style="bottom:50px;left:30px;"><a href="#none"><span class="blind">지점명</span></a></div>
+			<div class="marker_2" style="bottom:50px;left:100px;"><a href="#none"><span class="blind">지점명</span></a></div>
+			<div class="marker_3" style="bottom:50px;left:170px;"><a href="#none"><span class="blind">지점명</span></a></div>
+			<!-- //마커 표시 -->
+			<div class="store_search">
+				<h3>매장찾기</h3>
+				<ul class="nav">
+					<li><a href="#none" onclick="layerOpen('layerStoreName');">매장명</a></li><!-- 레이어 팝업 띄우기 : layerOpen('Id') -->
+					<li><a href="#none" onclick="layerOpen('layerStoreAddr');">주소</a></li>
+					<li><a href="#none" onclick="layerOpen('layerStoreOption');">옵션 선택</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- //content -->
+	</div> 
+	<!-- //container -->
+	<!-- footer -->
+	<footer id="footer">
+		<div class="family_site">
+			<a href="#none">Family Site :<span class="txt_brown"><span class="blind">BROWN SUGAR</span></span></a>
+		</div>
+		<ul class="foot_menu">
+			<li><a href="#none">브랜드 제휴 문의</a></li>
+			<li><a href="#none">가맹문의</a></li>
+			<li><a href="#none"><span class="sys">포메인 지원 시스템</span></a></li>
+		</ul>
+		<p class="copyright">
+			가맹문의  대표번호: 1899-2422(연결 1번)<br>
+			직통번호: 031-780-1500 | 이메일: help@phomein.com<br>
+			COPYRIGHT© DAILYKING INC. ALL RIGHT RESERVED.
+		</p>
+ 	</footer>
+	<!-- //footer -->
+	
+	<!-- layer popup -->
+	<div class="dim"></div>
+	<!-- 매장명 찾기 -->
+	<div id="layerStoreName" class="layer_pop">
+		<div class="head">
+			<h4>매장명 찾기</h4>
+		</div>
+		<div class="cont">
+			<div class="search_input">
+				<input type="text" class="text" placeholder="매장명를 입력하세요" title="매장명">
+				<button type="button" class="btn_search"><span class="blind">검색</span></button>
+			</div>
+			<div class="search_result">
+				<div class="result_option">
+					<button type="button" class="btn_retry">재검색</button>
+					<span class="num">검색결과 <em>5</em> 건</span>
+				</div>
+				<div class="list_area">
+					<ul>
+						<li>
+							<a href="#none" class="link_detail">
+								<span class="tit">수내점</span>
+								<span class="tel">031-713-8586</span>
+								<span class="addr">경기도 성남시 분당구 황새울로214번길 8 MS 프라자 경기도 성남시 분당구 황새울로214번길 8 MS 프라자</span>
+								<span class="option">
+									<span class="ico_delivery"><em class="blind">딜리버리</em></span>
+									<span class="ico_best"><em class="blind">우수매장</em></span>
+									<span class="ico_parking"><em class="blind">주차가능</em></span>
+								</span>
+							</a>
+						</li>
+						<li>
+							<a href="#none" class="link_detail">
+								<span class="tit">수내점</span>
+								<span class="tel">031-713-8586</span>
+								<span class="addr">경기도 성남시 분당구 황새울로214번길 8 MS 프라자</span>
+								<span class="option">
+									<span class="ico_delivery"><em class="blind">딜리버리</em></span>
+									<!--<span class="ico_best"><em class="blind">우수매장</em></span>-->
+									<!--<span class="ico_parking"><em class="blind">주차가능</em></span>-->
+								</span>
+							</a>
+						</li>
+						<li>
+							<a href="#none" class="link_detail">
+								<span class="tit">수내점</span>
+								<span class="tel">031-713-8586</span>
+								<span class="addr">경기도 성남시 분당구 황새울로214번길 8 MS 프라자</span>
+								<span class="option">
+									<span class="ico_delivery"><em class="blind">딜리버리</em></span>
+									<!--<span class="ico_best"><em class="blind">우수매장</em></span>-->
+									<!--<span class="ico_parking"><em class="blind">주차가능</em></span>-->
+								</span>
+							</a>
+						</li>
+					</ul>	
+				</div>
+				<!-- 검색 결과 없을 때
+				<div class="list_area no_result">
+					<span>검색된 정보가 없습니다.</span>
+				</div>
+				<!-- //검색 결과 없을 때 -->
+			</div>
+		</div>
+		<button type="button" class="btn_close" onclick="layerClose('layerStoreName');"><span class="blind">닫기</span></button><!-- 레이어 팝업 닫기 : layerClose('Id') -->
+	</div>
+	<!-- //매장명 찾기 -->
+	<!-- 주소로 찾기 -->
+	<div id="layerStoreAddr" class="layer_pop">
+		<div class="head">
+			<h4>주소로 찾기</h4>
+		</div>
+		<div class="cont">
+			<div class="search_input">
+				<input type="text" class="text" placeholder="주소를 입력하세요" title="주소">
+				<button type="button" class="btn_search"><span class="blind">검색</span></button>
+			</div>
+			<div class="search_result">
+				<div class="result_option">
+					<button type="button" class="btn_retry">재검색</button>
+					<span class="num">검색결과 <em>0</em> 건</span>
+				</div>
+				<!-- 검색 결과 없을 때 -->
+				<div class="list_area no_result">
+					<span>검색된 정보가 없습니다.</span>
+				</div>
+				<!-- //검색 결과 없을 때 -->
+			</div>
+		</div>
+		<button type="button" class="btn_close" onclick="layerClose('layerStoreAddr');"><span class="blind">닫기</span></button><!-- 레이어 팝업 닫기 : layerClose('Id') -->
+	</div>
+	<!-- //주소로 찾기 -->
+	<!-- 옵션 선택 -->
+	<div id="layerStoreOption" class="layer_pop">
+		<div class="head">
+			<h4>옵션 선택</h4>
+		</div>
+		<div class="cont">
+			<div class="search_option">
+				<ul>
+					<li class="delivery">
+						<span class="checkbox">
+							<input type="checkbox" id="chkDeli" checked=""><label for="chkDeli">딜리버리</label>	
+						</span>
+					</li>
+					<li class="best">
+						<span class="checkbox">
+							<input type="checkbox" id="chkBest" checked=""><label for="chkBest">우수매장</label>	
+						</span>
+					</li>
+					<li class="parking">
+						<span class="checkbox">
+							<input type="checkbox" id="chkPark"><label for="chkPark">주차가능</label>	
+						</span>
+					</li>
+				</ul>
+			</div>
+			<div class="btn_area">
+				<a href="#none" class="btn_tyf c_black">검색</a>
+			</div>
+			<div class="search_result">
+				<div class="result_option">
+					<button type="button" class="btn_retry">재검색</button>
+					<span class="num">검색결과 <em>5</em> 건</span>
+				</div>
+				<div class="list_area">
+					<ul>
+						<li>
+							<a href="#none" class="link_detail">
+								<span class="tit">수내점</span>
+								<span class="tel">031-713-8586</span>
+								<span class="addr">경기도 성남시 분당구 황새울로214번길 8 MS 프라자 경기도 성남시 분당구 황새울로214번길 8 MS 프라자</span>
+								<span class="option">
+									<span class="ico_delivery"><em class="blind">딜리버리</em></span>
+									<span class="ico_best"><em class="blind">우수매장</em></span>
+									<span class="ico_parking"><em class="blind">주차가능</em></span>
+								</span>
+							</a>
+						</li>
+						<li>
+							<a href="#none" class="link_detail">
+								<span class="tit">수내점</span>
+								<span class="tel">031-713-8586</span>
+								<span class="addr">경기도 성남시 분당구 황새울로214번길 8 MS 프라자</span>
+								<span class="option">
+									<span class="ico_delivery"><em class="blind">딜리버리</em></span>
+									<!--<span class="ico_best"><em class="blind">우수매장</em></span>-->
+									<!--<span class="ico_parking"><em class="blind">주차가능</em></span>-->
+								</span>
+							</a>
+						</li>
+						<li>
+							<a href="#none" class="link_detail">
+								<span class="tit">수내점</span>
+								<span class="tel">031-713-8586</span>
+								<span class="addr">경기도 성남시 분당구 황새울로214번길 8 MS 프라자</span>
+								<span class="option">
+									<span class="ico_delivery"><em class="blind">딜리버리</em></span>
+									<!--<span class="ico_best"><em class="blind">우수매장</em></span>-->
+									<!--<span class="ico_parking"><em class="blind">주차가능</em></span>-->
+								</span>
+							</a>
+						</li>
+					</ul>	
+				</div>
+				<!-- 검색 결과 없을 때
+				<div class="list_area no_result">
+					<span>검색된 정보가 없습니다.</span>
+				</div>
+				<!-- //검색 결과 없을 때 -->
+			</div>
+		</div>
+		<button type="button" class="btn_close" onclick="layerClose('layerStoreOption');"><span class="blind">닫기</span></button><!-- 레이어 팝업 닫기 : layerClose('Id') -->
+	</div>
+	<!-- //옵션 선택 -->
+	<!-- //layer popup -->
+</div>
+<!-- //wrap -->
+<script src="../common/js/jquery-1.12.4.min.js"></script>
+<script src="../common/js/swiper.min.js"></script>
+<script src="../common/js/common.js"></script>
+</body>
+</html>

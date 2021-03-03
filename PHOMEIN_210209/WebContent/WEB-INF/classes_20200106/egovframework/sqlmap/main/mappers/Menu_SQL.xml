@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.comm.service.impl.MenuMapper">
+
+	<sql id="getSearch">
+		<if test="code_type == 'code'"> 
+        	AND LENGTH(code) = 3
+        </if>
+        <if test="code_type == 'sub_code'"> 
+        	AND LENGTH(code) = 6
+        	AND code LIKE CONCAT(SUBSTRING(#{code}, 1, 3), '%')
+	        AND code != SUBSTRING(#{code}, 1, 3)
+        </if>
+    </sql>
+
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		/* ProgramID=com.main.admin.comm.service.impl.MenuMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_menu_mgt A
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.comm.service.impl.MenuMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+					(SELECT code FROM tb_menu_mgt WHERE code = SUBSTRING(#{code}, 1, 3) LIMIT 1) p_code,
+					(SELECT menu_name FROM tb_menu_mgt WHERE code = SUBSTRING(#{code}, 1, 3) LIMIT 1) p_name,
+					code,
+					menu_name,
+					link,
+					ordr,
+					useyn,
+					(SELECT cast(MAX(code) + 1 as char(9)) FROM tb_menu_mgt
+		]]>
+					<where>
+						1 = 1
+						<include refid="getSearch" />
+					</where>
+					) AS nextcode
+			FROM tb_menu_mgt
+        <where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+		ORDER BY ordr ASC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="nextSeq" parameterType="hashmap" resultType="string">
+		/* ProgramID=com.main.admin.comm.service.impl.MenuMapper.nextSeq */
+        <![CDATA[
+	        SELECT * 
+	        FROM (
+		        SELECT MAX(seq)+1 
+		        FROM tb_menu_mgt
+	        ) tb
+		]]>
+	</select>
+	
+	<update id="mergeMenu" parameterType="com.main.admin.comm.web.vo.MenuVo">
+		/* ProgramID=com.main.admin.comm.service.impl.MenuMapper.mergeMenu */
+        <![CDATA[
+        	INSERT INTO 
+        		tb_menu_mgt (
+        			seq,
+            		code,
+            		menu_name,
+            		link,
+                	ordr,
+                	useyn
+                )
+                VALUES (
+                	#{seq},
+                	#{code},
+                	#{code_name},
+                	#{link},
+                	#{ordr},
+                	#{useyn}
+                )
+                ON DUPLICATE KEY UPDATE
+            		code=#{code},
+                	menu_name=#{code_name},
+                	link=#{link},
+                	ordr=#{ordr},
+                	useyn=#{useyn}
+        ]]>
+    </update>
+    
+    <update id="updateSortingMenu" parameterType="java.util.List">
+    	/* ProgramID=com.main.admin.comm.service.impl.MenuMapper.updateSortingMenu */
+    	<![CDATA[
+		    UPDATE tb_menu_mgt 
+		    SET ordr =
+		    CASE
+	    ]]>
+		<foreach collection="sortingArr" item="item" index="index">
+			WHEN seq = #{item} THEN (#{index}+1)
+		</foreach>
+			END
+			WHERE seq IN 
+			<foreach collection="sortingArr" item="item" index="index" separator="," open="(" close=")"> 
+				${item}
+            </foreach>  
+	</update>
+	
+	<select id="selectChildCnt" parameterType="hashmap" resultType="int">
+		/* ProgramID=com.main.admin.comm.service.impl.MenuMapper.selectChildCnt */ 
+		SELECT COUNT(*)
+		FROM tb_menu_mgt
+		WHERE code LIKE CONCAT(
+		(
+		SELECT
+			code
+		FROM tb_menu_mgt
+		WHERE seq = #{seq}
+		), '%')
+		AND 
+		code != (
+		SELECT
+			code
+		FROM tb_menu_mgt
+		WHERE seq = #{seq}
+		)
+	</select>
+	
+	<delete id="deleteMenu" parameterType="hashmap">
+    	/* ProgramID=com.main.admin.comm.service.impl.MenuMapper.deleteMenu */
+        <![CDATA[
+        	DELETE 
+		  	FROM tb_menu_mgt
+		  	WHERE seq = #{seq}
+		]]>
+	</delete>
+	
+	<select id="duplicateMenu" parameterType="hashmap" resultType="int">
+		/* ProgramID=com.main.admin.comm.service.impl.MenuMapper.duplicateMenu */ 
+		SELECT COUNT(*)
+		FROM tb_menu_mgt
+		WHERE code = #{code}
+	</select>
+
+</mapper>

@@ -1,0 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<link rel="stylesheet" type="text/css" href="/meng/common/css/font.css">
+<link rel="stylesheet" type="text/css" href="/meng/common/css/common.css">
+<link rel="stylesheet" type="text/css" href="/meng/common/css/layout.css">
+<link rel="stylesheet" type="text/css" href="/meng/common/css/content.css">
+<link rel="stylesheet" type="text/css" href="/meng/common/css/jquery.fullpage.css">
+<link rel="stylesheet" type="text/css" href="/meng/common/css/main.css">
+<script src="/meng/common/js/jquery-1.12.4.min.js"></script>
+<!--[if lt IE 9]>
+	<script src="../common/js/placeholders.min.js"></script>
+	<script src="../common/js/html5shiv.js"></script>
+<![endif]-->

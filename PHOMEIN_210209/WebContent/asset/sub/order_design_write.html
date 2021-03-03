@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<title>디자인 발주 신청 등록 | 인트라넷 | 포메인 통합 관리</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0, user-scalable=no">
+<link rel="shortcut icon" type="image/x-icon" href="../images/common/favicon.ico">
+<link rel="icon" href="../images/common/favicon.png">
+<link rel="stylesheet" href="../common/css/style.css" media="all">
+<!--[if lte IE 8]>
+	<link rel="stylesheet" href="../common/css/ie8.css" media="all">
+<![endif]-->
+<script src="../common/js/jquery-1.11.0.min.js"></script>
+<script src="../common/js/jquery.easing.1.3.js"></script>
+<script src="../common/js/jquery-ui.min.js"></script>
+<!--[if lte IE 9]>
+	<link rel="stylesheet" href="../common/css/ie9.css" media="all">
+	<script src="../common/js/placeholders.min.js"></script>
+	<script src="../common/js/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+
+<!-- wrap -->
+<div id="wrap">
+	<!-- dHead -->
+	<header id="dHead">
+		<!-- header-wrap -->
+		<section class="header-wrap">
+			<div class="inner">
+				<h1><a href="#"><img src="../images/common/logo.png" alt="GC 녹십자 관리자"></a></h1>
+				<ul class="global-menu">
+					<li class="user-name"><p class="">홍길동 <em>[master abc]</em></p></li>
+					<li class="user-info"><a href="#">내정보</a></li>
+					<li class="btn-logout"><a href="#">로그아웃</a></li>
+				</ul>
+			</div>
+		</section>
+		<!-- //header-wrap -->
+	</header>
+	<!--// dHead -->
+
+
+	<!-- dBody -->
+	<section id="dBody">
+		<!-- lnb -->
+		<aside id="lnb">
+			<ul>
+				<!--
+				//	@lnb
+				//
+				//	- lnb > li 태그에 actived 클래스 추가시 활성화(기본으로 열림);
+				//	- lnb > li 태그에 snb 태그가 없으면 스크립트에서 화살표 삭제 클래스 추가;
+				-->
+				<li>
+					<a href="#"><span>메뉴 관리</span></a>
+					<ul class="snb">
+						<li><a href="#"><span>제품 관리</span></a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#"><span>매장 관리</span></a>
+					<ul class="snb">
+						<li><a href="#"><span>매장 관리</span></a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#"><span>게시판 관리</span></a>
+					<ul class="snb">
+						<li><a href="#"><span>공지&언론보도</span></a></li>
+						<li><a href="#"><span>이벤트</span></a></li>
+						<li><a href="#"><span>포메인 SNS</span></a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#"><span>문의 관리</span></a>
+					<ul class="snb">
+						<li><a href="#"><span>고객의 소리</span></a></li>
+						<li><a href="#"><span>가맹점 문의</span></a></li>
+						<li><a href="#"><span>포인트 조회</span></a></li>
+						<li><a href="#"><span>포인트 병합 신청</span></a></li>
+						<li><a href="#"><span>포메인상품권 신청</span></a></li>
+					</ul>
+				</li>
+				<li class="actived">
+					<a href="#"><span>인트라넷</span></a>
+					<!--
+					//	@snb
+					//
+					//	- snb > li 태그에 actived 클래스 추가시 활성화
+					-->
+					<ul class="snb">
+						<li><a href="#"><span>공지사항</span></a></li>
+						<li><a href="#"><span>자료실</span></a></li>
+						<li><a href="#"><span>디자인 발주 신청 관리</span></a></li>
+						<li class="actived"><a href="#"><span>디자인 발주 신청</span></a></li>
+						<li><a href="#"><span>디자인 발주 신청 내역</span></a></li>
+						<li><a href="#"><span>본사 물품 신청 관리</span></a></li>
+						<li><a href="#"><span>본사 물품 신청 내역</span></a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#"><span>회원 관리</span></a>
+					<ul class="snb">
+						<li><a href="#"><span>온라인 회원</span></a></li>
+						<li><a href="#"><span>탈퇴 회원 관리</span></a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#"><span>사이트 관리</span></a>
+					<ul class="snb">
+						<li><a href="#"><span>관리자 관리</span></a></li>
+						<li><a href="#"><span>팝업 관리</span></a></li>
+						<li><a href="#"><span>메인 관리</span></a></li>
+						<li><a href="#"><span>PHO EVER 관리</span></a></li>
+						<li><a href="#"><span>우수매장 인터뷰 관리</span></a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#"><span>통계</span></a>
+					<ul class="snb">
+						<li><a href="#"><span>접속 통계</span></a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#"><span>공동 관리</span></a>
+					<ul class="snb">
+						<li><a href="#"><span>코드 관리</span></a></li>
+						<li><a href="#"><span>메뉴 관리</span></a></li>
+					</ul>
+				</li>
+			</ul>
+		</aside>
+		<!-- //lnb -->
+
+		<!-- contents -->
+		<section id="contents">
+			<!-- location -->
+			<p class="location">
+				<span>인트라넷</span>
+				<span>디자인 발주 신청</span>
+				<span>등록</span>
+			</p>
+			<!-- //location -->
+			<h3 class="con-title">디자인 발주 신청</h3>
+
+			<div class="default-cell">
+				<h4 class="sub-title">디자인 발주 신청 등록</h4>
+
+				<div class="line-info-list">
+					<ul>
+						<li>통합관리자에서 등록된 발주 신청 목록은 가맹점 관리자에서는 확인이 불가능합니다.</li>
+					</ul>
+				</div>
+
+				<div class="fc01 mb15">* 는 필수입력/선택 항목입니다</div>
+				<!-- 20190314 수정 s -->
+				<div class="order-list-data">
+					<ul>
+						<li>
+							<div class="list-img"><a href="#;"><img src="../images/tmp/@img_01.jpg" alt="제품 이미지"></a></div>
+							<div class="info">
+								<p class="list-name">명찰(금색)</p>
+								<p class="list-tit"><span>상품</span><span>가격</span><span>수량<strong class="need"></strong></span></p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+							</div>
+						</li>
+						<li>
+							<div class="list-img"><a href="#;"><img src="../images/tmp/@img_02.jpg" alt="제품 이미지"></a></div>
+							<div class="info">
+								<p class="list-name">자석(은색)</p>
+								<p class="list-tit"><span>상품</span><span>가격</span><span>수량<strong class="need"></strong></span></p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+								<!-- 같은 제품 종류 추가 시 -->
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+								<!-- //같은 제품 종류 추가 시 -->
+							</div>
+						</li>
+						<li>
+							<div class="list-img"><a href="#;"><img src="../images/tmp/@img_03.jpg" alt="제품 이미지"></a></div>
+							<div class="info">
+								<p class="list-name">메뉴판 내지(210*210) 신메뉴 전용</p>
+								<p class="list-tit"><span>상품</span><span>가격</span><span>수량<strong class="need"></strong></span></p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+							</div>
+						</li>
+					</ul>
+					<ul>
+						<li>
+							<div class="list-img"><a href="#;"><img src="../images/tmp/@img_04.jpg" alt="제품 이미지"></a></div>
+							<div class="info">
+								<p class="list-name">자석(은색)</p>
+								<p class="list-tit"><span>상품</span><span>가격</span><span>수량<strong class="need"></strong></span></p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+							</div>
+						</li>
+						<li>
+							<div class="list-img"><a href="#;"><img src="../images/tmp/@img_05.jpg" alt="제품 이미지"></a></div>
+							<div class="info">
+								<p class="list-name">명찰(금색)</p>
+								<p class="list-tit"><span>상품</span><span>가격</span><span>수량<strong class="need"></strong></span></p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+							</div>
+						</li>
+						<li>
+							<div class="list-img"><a href="#;"><img src="../images/tmp/@img_06.jpg" alt="제품 이미지"></a></div>
+							<div class="info">
+								<p class="list-name">메뉴판 내지(210*210) 신메뉴 전용</p>
+								<p class="list-tit"><span>상품</span><span>가격</span><span>수량<strong class="need"></strong></span></p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+							</div>
+						</li>
+					</ul>
+					<ul>
+						<li>
+							<div class="list-img"><a href="#;"><img src="../images/tmp/@img_07.jpg" alt="제품 이미지"></a></div>
+							<div class="info">
+								<p class="list-name">메뉴판 내지(210*210) 신메뉴 전용</p>
+								<p class="list-tit"><span>상품</span><span>가격</span><span>수량<strong class="need"></strong></span></p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+							</div>
+						</li>
+						<li>
+							<div class="list-img"><a href="#;"><img src="../images/tmp/@img_08.jpg" alt="제품 이미지"></a></div>
+							<div class="info">
+								<p class="list-name">메뉴판 내지(210*210) 신메뉴 전용</p>
+								<p class="list-tit"><span>상품</span><span>가격</span><span>수량<strong class="need"></strong></span></p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+							</div>
+						</li>
+						<li>
+							<div class="list-img"><a href="#;"><img src="../images/tmp/@img_384x384.jpg" alt="제품 이미지"></a></div>
+							<div class="info">
+								<p class="list-name">메뉴판 내지(210*210) 신메뉴 전용</p>
+								<p class="list-tit"><span>상품</span><span>가격</span><span>수량<strong class="need"></strong></span></p>
+								<p class="list-data">
+									<span class="data-tit">1종</span>
+									<span class="data-price">5,000원</span>
+									<span class="data-num"><input type="number" name="" id="" placeholder="0"></span>
+								</p>
+							</div>
+						</li>
+					</ul>
+					<div>
+						<div class="total-list">항목 : <span>2개</span> / 종류 : <strong>2개</strong></div>
+						<div class="total-sum">총 합계 금액 : <span>80,000원</span> <strong>(VAT / 배송료 별도)</strong></div>
+					</div>
+				</div>
+				<!-- //20190314 수정 e -->
+
+				<div class="fc01 mb15">* 는 필수입력/선택 항목입니다</div>
+				<div class="table-list-data">
+					<fieldset>
+						<legend>디자인 발주 신청 내역 상세 기본정보 입력 폼</legend>
+						<table class="view">
+							<caption>디자인 발주 신청 내역 상세 기본정보 입력 폼 테이블</caption>
+							<colgroup>
+								<col style="width:200px">
+								<col style="width:auto">
+							</colgroup>
+							<tbody>
+								<tr>
+									<th scope="row">입금자명 <span class="need"></span></th>
+									<td>
+										<input type="text" style="width:100%" placeholder="입금자명 입력하세요">
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">입금예정일 <span class="need"></span></th>
+									<td>
+										<div class="input-btns"><p class="date-input"><input type="text" name="" id="" class="datepicker" style="width:130px;" value="2018-10-10"></p></div>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">제목 <span class="need"></span></th>
+									<td>
+										<input type="text" style="width:100%" placeholder="제목을 입력하세요">
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">내용</th>
+									<td>
+										<textarea name="" id="" placeholder="내용을 입력하세요"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">신청 매장명 <span class="need"></span></th>
+									<td>
+										<p class="input-btns"><input type="text" name="" id="" style="width:250px" readonly=""><a href="#" class="btn-01 type-03 round">매장 검색</a></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">작성</th>
+									<td>admin1234</td>
+								</tr>
+							</tbody>
+						</table>
+					</fieldset>
+				</div>
+				<p class="btn-page-wrap">
+					<a href="#" class="btn-01 type-02">목록</a>
+					<a href="#" class="btn-01 type-01">저장</a>
+				</p>
+			</div>
+		</section>
+		<!-- //contents -->
+
+
+		<!-- dFoot -->
+		<footer id="dFoot"><div class="copy">Copyright ⓒ 2018 DAILYKING INC. All rights reserved.</div></footer>
+		<!-- //dFoot -->
+	</section>
+	<!--// dBody -->
+</div>
+<!-- //wrap -->
+
+<script src="../common/js/front_ui.js"></script>
+<script>
+$(function(){
+	$(".datepicker").datepicker({
+		showOn:"both",
+		buttonImage:"../images/datepicker/btn_datepicker.png",
+		buttonImageOnly:true,
+		dateFormat: 'yy-mm-dd',
+		prevText: '이전 달',
+		nextText: '다음 달',
+		monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		dayNames: ['일','월','화','수','목','금','토'],
+		dayNamesShort: ['일','월','화','수','목','금','토'],
+		dayNamesMin: ['일','월','화','수','목','금','토'],
+		showMonthAfterYear: true,
+		yearSuffix: '년'
+	});
+});
+</script>
+</body>
+</html>

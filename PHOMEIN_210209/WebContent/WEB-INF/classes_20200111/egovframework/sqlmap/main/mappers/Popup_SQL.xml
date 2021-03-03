@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.site.service.impl.PopupMapper">
+	
+	<sql id="getSearch">
+		<if test="search_title != null and search_title != ''">
+			AND title LIKE CONCAT('%' , #{search_title} , '%')
+		</if>
+		<!--  키워드 검색  -->
+		<if test="search_useyn != null and search_useyn != ''">
+	        <choose>
+	            <when test="search_useyn == 0">
+	            </when>
+	            <when test="search_useyn == 1">
+	            	AND useyn = 'Y'
+	            </when>
+	            <when test="search_useyn == 2">
+	            	AND useyn = 'N'
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="search_cate != null and search_cate != ''">
+	       AND cate = #{search_cate}
+	    </if>
+	</sql>	
+	
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.site.service.impl.PopupMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_popup A 
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.site.service.impl.PopupMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+					title, 
+					cate,
+				    startdt, 
+				    enddt, 
+				    viewtop,
+				    viewleft, 
+				    popupsizew,
+				    popupsizeh,
+				    pc_img,
+				    pc_alt,
+				    pc_url,
+				    useyn,
+				    regid, 
+				    regdt,
+				    tb_popupcol,
+				    m_img,
+				    m_alt,
+				    m_url,
+				    udtid,
+				    udtdt
+			FROM tb_popup
+        ]]>
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectPopupView" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.site.service.impl.PopupMapper.selectPopupView */
+        <![CDATA[
+	        SELECT seq,
+					title, 
+					cate,
+				    startdt, 
+				    enddt, 
+				    viewtop,
+				    viewleft, 
+				    popupsizew,
+				    popupsizeh,
+				    pc_img,
+				    pc_alt,
+				    pc_url,
+				    useyn,
+				    regid, 
+				    regdt,
+				    tb_popupcol,
+				    m_img,
+				    m_alt,
+				    m_url,
+				    udtid,
+				    udtdt
+				FROM tb_popup
+		]]>
+			<if test="seq != null and seq != ''">
+				WHERE seq = #{seq}
+			</if>
+	</select>
+	
+	<update id="mergePopup" parameterType="com.main.admin.site.web.vo.PopupVo">
+		/* ProgramID=com.main.admin.site.service.impl.PopupMapper.mergePopup */
+        <![CDATA[
+        	INSERT INTO 
+        		tb_popup (
+        			seq,
+					title, 
+					cate,
+				    startdt, 
+				    enddt, 
+				    viewtop,
+				    viewleft, 
+				    popupsizew,
+				    popupsizeh,
+				    pc_img,
+				    pc_alt,
+				    pc_url,
+				    useyn,
+				    regid, 
+				    regdt,
+				    tb_popupcol,
+				    m_img,
+				    m_alt,
+				    m_url,
+				    udtid,
+				    udtdt
+                )
+                VALUES (
+                	#{seq},
+                	#{title},
+                	#{cate},
+                	#{startdt},
+                	#{enddt},
+                	#{viewtop},
+                	#{viewleft},
+                	#{popupsizew},
+                	#{popupsizeh},
+                	#{pc_img_txt},
+                	#{pc_alt},
+                	#{pc_url},
+                	#{useyn},
+                	#{regid},
+                	now(),
+                	#{tb_popupcol},
+                	#{m_img_txt},
+                	#{m_alt},
+                	#{m_url},
+                	#{regid},
+                	now()
+                )
+                ON DUPLICATE KEY UPDATE
+                	title=#{title},
+                	cate=#{cate},
+                	startdt=#{startdt},
+                	enddt=#{enddt},
+                	viewtop=#{viewtop},
+                	viewleft=#{viewleft},
+                	popupsizew=#{popupsizew},
+                	popupsizeh=#{popupsizeh},
+                	pc_img=#{pc_img_txt},
+                	pc_alt=#{pc_alt},
+                	pc_url=#{pc_url},
+                	useyn=#{useyn},
+                	tb_popupcol=#{tb_popupcol},
+                	m_img=#{m_img_txt},
+                	m_alt=#{m_alt},
+                	m_url=#{m_url},
+                	udtid=#{modid},
+                	udtdt=now()
+        ]]>
+    </update>
+    
+    <delete id="deletePopup" parameterType="hashmap">
+    	/* ProgramID=com.main.admin.site.service.impl.PopupMapper.deletePopup */
+        <![CDATA[
+        	DELETE 
+		  	FROM tb_popup
+		  	WHERE seq = #{seq}
+		]]>
+	</delete>
+    
+    <select id="nextSeq" parameterType="hashmap" resultType="string">
+		/* ProgramID=com.main.admin.site.service.impl.PopupMapper.nextSeq */
+        <![CDATA[
+	        SELECT * 
+	        FROM (
+		        SELECT MAX(seq)+1 
+		        FROM tb_popup
+	        ) tb
+		]]>
+	</select>
+	
+	<update id="updateUseYn" parameterType="hashmap">
+		/* ProgramID=com.main.admin.site.service.impl.PopupMapper.updateUseYn */
+        <![CDATA[
+        	UPDATE tb_popup
+        	SET useyn = #{useyn}
+        	WHERE seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+    
+    <select id="showPopup" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.site.service.impl.PopupMapper.showPopup */
+        <![CDATA[
+			SELECT seq,
+					title, 
+					cate,
+				    startdt, 
+				    enddt, 
+				    viewtop,
+				    viewleft, 
+				    popupsizew,
+				    popupsizeh,
+				    pc_img,
+				    pc_alt,
+				    pc_url,
+				    useyn,
+				    regid, 
+				    regdt,
+				    tb_popupcol,
+				    m_img,
+				    m_alt,
+				    m_url,
+				    udtid,
+				    udtdt
+			FROM tb_popup
+        ]]>
+        	WHERE now() BETWEEN startdt AND enddt
+        	AND useyn != 'N'
+        	AND cate = #{cate}
+	</select>
+
+</mapper>

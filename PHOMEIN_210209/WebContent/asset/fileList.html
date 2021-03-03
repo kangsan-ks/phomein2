@@ -1,0 +1,1477 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0, user-scalable=no">
+<title>포메인 통합/가맹점 관리자 File List</title>
+<link rel="shortcut icon" type="image/x-icon" href="images/common/favicon.ico">
+<link rel="icon" href="images/common/favicon.png">
+<style type="text/css">
+html, body {margin:0; padding:0;}
+html {overflow-y:scroll;}
+body {color:#666; background-color:#fff; font:12px/1.5 'Malgun Gothic', Dotum, '돋움', Verdana, sans-serif;}
+a {color:#27e; text-decoration:none;}
+a:focus,
+a:hover,
+a:active {text-decoration:underline;}
+em {font-style:normal;}
+.header {padding:.5em;}
+.header h1 {margin-right:1em; color:#000; font-size:2em; text-align:center;}
+.header ul {display:inline; font-size:1.5em; list-style:none;}
+.header ul li {display:inline;}
+.group-title {margin-top:1em; color:#000; font-weight:bold; font-size:1.5em;}
+table {width:100%; border-collapse:collapse; border-spacing:0;}
+table caption {display:none;}
+table th {color:#333; background-color:#eee;}
+table th,
+table td {padding:0 .5em; border:1px solid #ddd; text-align:left;}
+table th,
+table td.stat,
+table td.date {text-align:center;}
+table tr.even,
+table tr td.multi {background-color:#fafafa;}
+table tr.add td {background-color:#fd0;}
+table tr.modify td {background-color:#fffeb4;}
+table tr.hover td {background-color:#eee;}
+table tr.none td {color:#000; background-color:#fc8989;}
+table tr.up td {background-color:#ffe9f5;}
+.update {color:#ff0000 !important;}
+table tr td em {display:inline-block; margin:0 3px; font-size:12px; color:red; font-style:normal;}
+table tr td strong {display:inline-block; margin:0 3px; font-size:12px; color:green; font-style:normal;}
+.section {margin:0 0 15px;}
+.section .title {margin:0; padding:0; color:#000; font-weight:bold; font-size:100%;}
+body.js .section .title {padding:.5em; border:1px solid #ccc; background-color:#ddd; cursor:pointer;}
+body.js .section + .section .title {border-top:0;}
+body.js .section .title .page-count {color:#666; font-weight:normal;}
+body.js .section .content {display:none;}
+.attention {margin-bottom:20px; padding:20px; color:#000; font-weight:bold; background:rgba(135,135,135,0.3);}
+#sb-body {border:none !important;}
+.state-ico {padding:0 10px 0 0; line-height:14px; text-align:right;}
+@media screen and (max-width:520px){
+	table colgroup,
+	table td{display:none;}
+	table th{display:none;}
+	table tr{position:relative;display:block;}
+	table td.stat{position:absolute; top:0; right:0; display:block; width:auto; text-align:center; border:none; font-size:15px; line-height:20px; padding:10px 15px;}
+	table td.link{display:block; font-size:15px; line-height:20px; padding:10px 50px 10px 15px;word-break:break-all;}
+	table td.link a{display:block;}
+	.attention {margin-bottom:20px; padding:20px 0; color:#000; font-weight:bold; background:rgba(135,135,135,0.3);}
+	body.js .section .title {padding:10px 15px; font-size:17px; border:1px solid #ccc; background-color:#ddd; cursor:pointer;}
+}
+
+
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript">
+(function ($) {
+	$.fn.stat = function (options) {
+		var settings = $.extend({
+				title: 'h2.title',
+				content: 'div.content',
+				files: 'tbody tr',
+				date: 'td.date',
+				index: 0,
+				openAll: false,
+				speed: 'fast'
+			}, options),
+			all_sections = this,
+			header = $('div.header');
+		return this.each(function () {
+			var self = this,
+				$self = $(self),
+				title_text = [],
+				completed = 0;
+			self.section_title = $(settings.title, $self);
+			self.content = $(settings.content, $self);
+			self.files = $(settings.files, $self);
+			self.files.each(function () {
+				var date = $(settings.date, this);
+				date.each(function () {
+					var text = $(this).text();
+					if (text) {
+						completed++;
+					}
+				});
+			});
+			self.files
+				.bind('mouseenter', function () {
+					$(this).addClass('hover');
+				})
+				.bind('mouseleave', function () {
+					$(this).removeClass('hover');
+				});
+			title_text = [self.section_title.text(), ' <span class="page-count">(', completed, '/', self.files.length, ')</span>'];
+			self.section_title.html(title_text.join(''));
+			self.section_title.bind('click', function () {
+				self.content.slideToggle(settings.speed);
+			});
+			if (settings.openAll || ((settings.index - 1) === all_sections.index(this))) {
+				self.content.css('display', 'block');
+			}
+		});
+	};
+	$(document).ready(function () {
+		$('div.section').stat({ openAll: true });
+		$('#total').text($('tbody tr').length);
+		$('tbody tr:even').addClass('even');
+		$('tbody td[rowspan][rowspan!=1]').addClass('multi');
+
+		//link set
+		var link = $('.content .link');
+		link.each(function(idx){
+			var _this = $(this);
+			var _path = _this.parents('.content').find('.path').eq(0).text();
+			var tag = '<a href="' + _path + _this.text() + '" target="_blank">' + _this.text() + '</a>';
+			_this.html(tag);
+		});
+
+	});
+}(jQuery));
+</script>
+</head>
+<body class="js">
+	<div class="header">
+		<h1>포메인 통합/가맹점 관리자 File List</h1>
+	</div>
+	<div class="attention">
+	<ul class="refer">
+		<li>문서형식 선언 : HTML5</li>
+		<li>meta 정보 :  charset="utf-8"</li>
+		<li>x브라우징 : 크롬, ie10.0 (standard 브라우져), ie9.0, ie11.0, FireFox(최신 vs), 사파리, 오페라, Edge</li>
+	</ul>
+	<ul class="important">
+		<li><span>개발주의 사항 :</span></li>
+		<li>1. 상단 DOCTYPE선언 삭제하거나 개발관련 코드 넣지 마세요!!. css 제대로 렌더링 안됩니다.</li>
+		<li>2. 그밖의 주의 사항은 별도 첨부합니다.</li>
+		<li>3. 공통 스크립트 및 독립적 스크립트 로드 순위를 맨 하단으로 설정하였습니다.</li>
+		<li>4. 수정날짜는 yyyymmdd 로 표시합니다.</li>
+	</ul>
+	<ul class="important">
+		<li>최종 업데이트 날짜 : <em style="color:red;">2019-05-02</em></li>
+	</ul>
+	</div>
+	<p class="state-ico">
+		○ 작업중 &nbsp;
+		● 완료
+	</p>
+
+	<!-- 가이드 -->
+	<div class="section">
+		<h2 class="title">가이드</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>공통레이아웃</td>
+						<td></td>
+						<td></td>
+						<td class="path">./@guide/</td>
+						<td class="link">layout.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>템플릿</td>
+						<td></td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">template.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>레이어팝업</td>
+						<td></td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">pop.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //가이드 -->
+
+	<h2>통합 관리자</h2>
+	<!-- 로그인 -->
+	<div class="section">
+		<h2 class="title">로그인</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>로그인</td>
+						<td></td>
+						<td></td>
+						<td class="path">./sub/</td>
+						<td class="link">login.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //로그인 -->
+
+	<!-- 메뉴 관리 -->
+	<div class="section">
+		<h2 class="title">메뉴 관리</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>메뉴</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./sub/</td>
+						<td class="link">product_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-04-22</td>
+						<td>
+							- 검색 버튼 수정 (20190422 주석)
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">product_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">product_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //메뉴 관리 -->
+
+	<!-- 매장 관리 -->
+	<div class="section">
+		<h2 class="title">매장 관리</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>매장</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./sub/</td>
+						<td class="link">store_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">store_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">store_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //메뉴 관리 -->
+
+	<!-- 커뮤니티 -->
+	<div class="section">
+		<h2 class="title">커뮤니티</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>공지&언론보도</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./sub/</td>
+						<td class="link">press_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">press_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">press_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>이벤트</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">event_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">event_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">event_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td>매장 검색 팝업</td>
+						<td class="path"></td>
+						<td class="link">store_search_pop.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td><strong>* 공동 팝업</strong></td>
+					</tr>
+					<tr>
+						<td>포메인 SNS</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">sns_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">sns_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">sns_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //커뮤니티 -->
+
+	<!-- 문의 관리 -->
+	<div class="section">
+		<h2 class="title">문의 관리</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>고객의 소리</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./sub/</td>
+						<td class="link">customer_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/답변</td>
+						<td>접수완료 이메일 / 유선</td>
+						<td class="path"></td>
+						<td class="link">customer_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td>답변완료 이메일 / 유선</td>
+						<td class="path"></td>
+						<td class="link">customer_view2.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td>이메일</td>
+						<td class="path"></td>
+						<td class="link">email01.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td><strong>* 메일폼</strong></td>
+					</tr>
+					<tr>
+						<td>가맹점 문의</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">store_inquiry_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">store_inquiry_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>포인트 조회</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">point_list.html</td>
+						<td class="stat"></td>
+						<td class="date"><em></em></td>
+						<td><strong>이지포켓 개발 완료 된 내용 확인 필요</strong></td>
+					</tr>
+					<tr>
+						<td>포인트 병합 신청</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">point_ma_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-02-25</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>포메인상품권 신청</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">coupon_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-02-25</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //문의 관리 -->
+
+	<!-- 인트라넷 -->
+	<div class="section">
+		<h2 class="title">인트라넷</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>매장 공지</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./sub/</td>
+						<td class="link">board_list.html</td>
+						<td class="stat">●</td>
+						<td class="date"><em>2019-05-02</em></td>
+						<td>
+							- 모바일 수정 (20190502 주석 처리)
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">board_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">board_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td>
+							<strong></strong>
+						</td>
+					</tr>
+					<tr>
+						<td>자료실</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">reference_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">reference_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">reference_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>디자인 발주 신청 관리</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_design_manage_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_design_manage_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_design_manage_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>디자인 발주 신청</td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_design_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-14</td>
+						<td>
+							-20190314 주석 처리
+						</td>
+					</tr>
+					<tr>
+						<td>디자인 발주 신청 내역</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_design_detail_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/답글</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_design_detail_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-14</td>
+						<td>
+							-20190314 주석 처리
+						</td>
+					</tr>
+					<tr>
+						<td>본사 물품 신청 관리</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_Item_manage_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_Item_manage_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_Item_manage_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>본사 물품 신청 내역</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_Item_detail_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/답글</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_Item_detail_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-27</td>
+						<td>
+							-20190327 주석 처리<br>
+							-20190314 주석 처리
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //문의 관리 -->
+
+	<!-- 회원 관리 -->
+	<div class="section">
+		<h2 class="title">회원 관리</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>온라인 회원</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./sub/</td>
+						<td class="link">member_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">member_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td>
+							<strong></strong>
+						</td>
+					</tr>
+					<tr>
+						<td>탈퇴회원 관리</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">leave_user_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //회원 관리 -->
+
+	<!-- 사이트 관리 -->
+	<div class="section">
+		<h2 class="title">사이트 관리</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>관리자관리</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./sub/</td>
+						<td class="link">manager_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">manager_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">manager_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td>관리자 비밀번호 수정 팝업</td>
+						<td class="path"></td>
+						<td class="link">pwd_pop.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td><strong>* 공동 팝업</strong></td>
+					</tr>
+					<tr>
+						<td>팝업관리</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">popup_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">popup_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">popup_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>메인관리</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">main_manage.html</td>
+						<td class="stat">○</td>
+						<td class="date"><em></em></td>
+						<td>메인 확인 후 업데이트</td>
+					</tr>
+					<tr>
+						<td>PHO EVER 관리</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">pho_ever_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">pho_ever_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">pho_ever_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>우수매장 인터뷰 관리</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">best_store_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">best_store_write.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">best_store_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //사이트 관리 -->
+
+	<!-- 통계 -->
+	<div class="section">
+		<h2 class="title">통계</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>접속 통계</td>
+						<td></td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">-</td>
+						<td class="stat"></td>
+						<td class="date"><em></em></td>
+						<td><strong>* 구글 애널리틱스 이동</strong></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //통계 -->
+
+	<!-- 공통 관리 -->
+	<div class="section">
+		<h2 class="title">공통 관리</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>코드 관리</td>
+						<td>대분류</td>
+						<td>목록/등록/수정</td>
+						<td class="path">./sub/</td>
+						<td class="link">code_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>중분류</td>
+						<td>목록/등록/수정</td>
+						<td class="path"></td>
+						<td class="link">code_list2.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>소분류</td>
+						<td>목록/등록/수정</td>
+						<td class="path"></td>
+						<td class="link">code_list3.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>메뉴 관리</td>
+						<td>상위메뉴</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">category_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>하위메뉴</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">category_list2.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //공통 관리 -->
+
+	<h2>가맹점 관리자</h2>
+	<!-- 가맹점 로그인 -->
+	<div class="section">
+		<h2 class="title">가맹점 로그인</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>로그인</td>
+						<td></td>
+						<td></td>
+						<td class="path">./franchisee_sub/</td>
+						<td class="link">login.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //가맹점 로그인 -->
+
+	<!-- 가맹점 인트라넷 -->
+	<div class="section">
+		<h2 class="title">가맹점 인트라넷</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>매장 공지</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./franchisee_sub/</td>
+						<td class="link">board_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">board_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td>
+							<strong></strong>
+						</td>
+					</tr>
+					<tr>
+						<td>자료실</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">reference_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td><strong></strong></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">reference_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td><strong></strong></td>
+					</tr>
+					<tr>
+						<td>디자인 발주 신청</td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_design_write.html</td>
+						<td class="stat">●</td>
+						<td class="date"><em>2019-05-09</em></td>
+						<td>
+							-20190509 주석 처리<br>
+							-20190314 주석 처리
+						</td>
+					</tr>
+					<tr>
+						<td>디자인 발주 신청 내역</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_design_detail_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정/답글</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_design_detail_view.html</td>
+						<td class="stat">●</td>
+						<td class="date"><em>2019-05-09</em></td>
+						<td>
+							-20190509 주석 처리<br>
+							-20190314 주석 처리
+						</td>
+					</tr>
+					<tr>
+						<td>본사 물품 신청</td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_Item_write.html</td>
+						<td class="stat">●</td>
+						<td class="date"><em>2019-05-09</em></td>
+						<td>
+							-20190509 주석 처리<br>
+							-20190314 주석 처리
+						</td>
+					</tr>
+					<tr>
+						<td>본사 물품 신청 내역</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_Item_detail_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세/수정/답글</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">order_Item_detail_view.html</td>
+						<td class="stat">●</td>
+						<td class="date"><em>2019-05-09</em></td>
+						<td>
+							-20190509 주석 처리<br>
+							-20190327 주석 처리<br>
+							-20190314 주석 처리
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //가맹점 문의 관리 -->
+
+		<!-- 가맹점 마이페이지 -->
+	<div class="section">
+		<h2 class="title">가맹점 마이페이지</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>개인정보수정</td>
+						<td></td>
+						<td></td>
+						<td class="path">./franchisee_sub/</td>
+						<td class="link">my_info.html</td>
+						<td class="stat">●</td>
+						<td class="date">2018-12-31</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //가맹점 마이페이지 -->
+
+</body>
+</html>

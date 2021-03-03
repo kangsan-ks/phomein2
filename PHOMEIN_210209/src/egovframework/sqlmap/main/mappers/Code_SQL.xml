@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.cmmn.service.impl.CmmnMapper">
+
+
+	<select id="selectCode" parameterType="codeVO"  resultType="codeVO" >
+		/* ProgramID=com.main.cmmn.service.impl.CmmnMapper.selectCode */
+		SELECT			
+			 code
+			, name
+		FROM tb_code_mgt 
+		WHERE 
+			LENGTH(code) = 3
+			AND SUBSTR(code, 1, 3) = #{code}
+			AND useyn = 'Y'
+		ORDER BY ordr ASC, seq ASC
+	</select>
+	<select id="selectCodeSub" parameterType="codeVO"  resultType="codeVO" >
+		/* ProgramID=com.main.cmmn.service.impl.CmmnMapper.selectCodeSub */
+		<![CDATA[
+		SELECT			
+			 code
+			, name
+		FROM tb_code_mgt 
+		WHERE 
+			LENGTH(code)  > ]]> 3
+			AND SUBSTR(code, 1, 3) = #{code}
+			AND useyn = 'Y'
+		ORDER BY ordr ASC, seq ASC
+	</select>	
+
+	<select id="selectCodeNm" parameterType="codeVO" resultType="codeVO" >
+		/* ProgramID=com.main.cmmn.service.impl.CmmnMapper.selectCodeNm */
+		SELECT			
+			name
+		FROM tb_code_mgt
+		WHERE			
+		    code = #{code}
+		    AND useyn = 'Y'
+	</select>
+	
+	<select id="selectMenuNmFirst" parameterType="codeVO"  resultType="codeVO" >
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectMenuNmFirst */
+		SELECT CODE AS menuCd, menu_name AS menuNm, link
+		FROM tb_menu_mgt
+		WHERE 
+			LENGTH(code) = 3
+			AND useyn = 'Y'
+		ORDER BY ordr ASC
+	</select>
+
+	<select id="selectMenuNmSub" parameterType="codeVO"  resultType="codeVO" >
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectMenuNmSub */
+		<![CDATA[
+		SELECT CODE AS menuCd, menu_name AS menuNm, link
+		FROM tb_menu_mgt
+		WHERE 
+			LENGTH(code)  > ]]> 3
+			AND SUBSTR(code, 1, 3) = #{menuCd}
+			AND useyn = 'Y'
+		ORDER BY ordr ASC
+	</select>
+	
+	<select id="selectMenuNm" parameterType="codeVO" resultType="codeVO" >
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectMenuNm */
+		SELECT			
+			menu_name AS menuNm
+		FROM tb_menu_mgt
+		WHERE			
+		    code = #{menuCd}
+		    AND useyn = 'Y'
+	</select>
+	
+	<select id="selectPriceList" parameterType="codeVO" resultType="codeVO" >
+		SELECT 
+			seq, useq, options, price
+		FROM tb_design_price
+			where useq = #{useq}
+	</select>
+	
+	<select id="selectPriceDetailList" parameterType="codeVO" resultType="codeVO" >
+		SELECT 
+			p.seq, p.useq, p.OPTIONS, p.price,
+			d.productseq, d.ea
+		FROM tb_design_price p LEFT OUTER JOIN tb_design_orderdetail d
+		on p.seq = d.productseq AND d.orderseq = #{orderseq}
+		WHERE 1 = 1 AND  p.useq = #{useq} 
+	</select>
+	
+	
+	
+	
+	
+	
+
+</mapper>

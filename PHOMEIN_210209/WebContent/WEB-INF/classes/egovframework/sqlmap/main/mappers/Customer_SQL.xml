@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.customer.service.impl.CustomerMapper">
+
+	<sql id="getSearch">
+		<if test="search_name != null and search_name != ''">
+			AND name LIKE CONCAT('%' , #{search_name} , '%')
+		</if>
+		<if test="search_hp != null and search_hp != ''">
+			AND hp LIKE CONCAT('%' , #{search_hp} , '%')
+		</if>
+		<if test="search_email != null and search_email != ''">
+			AND email LIKE CONCAT('%' , #{search_email} , '%')
+		</if>
+		<!--  키워드 검색  -->
+		<if test="search_cate != null and search_cate != ''">
+			AND cate = #{search_cate}
+		</if>
+		<if test="search_working != null and search_working != ''">
+	        <choose>
+	            <when test="search_working == 0">
+	            </when>
+	            <when test="search_working == 1">
+	            	AND working = 'Y'
+	            </when>
+	            <when test="search_working == 2">
+	            	AND working = 'N'
+	            </when>          	            
+			</choose>
+		</if>
+	</sql>
+	
+	<sql id="getPointSearch">
+		<if test="search_cardno != null and search_cardno != ''">
+			AND cardno LIKE CONCAT('%' , #{search_cardno} , '%')
+		</if>
+		<if test="search_hp != null and search_hp != ''">
+			AND hp LIKE CONCAT('%' , #{search_hp} , '%')
+		</if>
+		<!--  키워드 검색  -->
+		<if test="search_working != null and search_working != ''">
+	        <choose>
+	            <when test="search_working == 0">
+	            </when>
+	            <when test="search_working == 1">
+	            	AND working = 'Y'
+	            </when>
+	            <when test="search_working == 2">
+	            	AND working = 'N'
+	            </when>          	            
+			</choose>
+		</if>
+	</sql>
+	
+	<sql id="getCouponSearch">
+		<if test="search_name != null and search_name != ''">
+			AND name LIKE CONCAT('%' , #{search_name} , '%')
+		</if>
+		<if test="search_hp != null and search_hp != ''">
+			AND hp LIKE CONCAT('%' , #{search_hp} , '%')
+		</if>
+		<!--  키워드 검색  -->
+		<if test="search_working != null and search_working != ''">
+	        <choose>
+	            <when test="search_working == 0">
+	            </when>
+	            <when test="search_working == 1">
+	            	AND working = 'Y'
+	            </when>
+	            <when test="search_working == 2">
+	            	AND working = 'N'
+	            </when>          	            
+			</choose>
+		</if>
+	</sql>
+
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.SEQ) AS totCnt
+		FROM tb_customer A 
+		<where>
+			1 = 1
+			AND code = #{code}
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+			    	code, 
+			    	cate, 
+			    	title, 
+			    	name, 
+			    	email, 
+			    	hp,
+			    	feedkind, 
+			    	contents, 
+			    	working,
+			    	feedresult, 
+			    	answer, 
+			    	regdt, 
+			    	moddt,
+			    	answerdt, 
+			    	answerid, 
+			    	uparea, 
+			    	upprice, 
+			    	storetype,
+			    	storeyn,
+			    	filename1, 
+			    	filename2, 
+			    	filename3, 
+			    	filename4, 
+			    	filename5,
+			    	answeryn
+			FROM tb_customer
+        ]]>
+		<where>
+			1 = 1
+			AND code = #{code}
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY SEQ DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectPointTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.selectPointTotCnt */ 
+		SELECT
+			COUNT(A.SEQ) AS totCnt
+		FROM tb_point A 
+		<where>
+			1 = 1
+			<include refid="getPointSearch" />
+		</where>
+	</select>
+
+	<select id="selectPointPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.selectPointPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+			    	cardno, 
+			    	apoint, 
+			    	hp, 
+			    	bpoint, 
+			    	totpoint, 
+			    	regdt,
+			    	regid, 
+			    	moddt,
+			    	modid, 
+			    	working
+			FROM tb_point
+        ]]>
+		<where>
+			1 = 1
+			<include refid="getPointSearch" />
+		</where>        
+		ORDER BY SEQ DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectCouponTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.selectCouponTotCnt */ 
+		SELECT
+			COUNT(A.SEQ) AS totCnt
+		FROM tb_coupon A 
+		<where>
+			1 = 1
+			<include refid="getCouponSearch" />
+		</where>
+	</select>
+
+	<select id="selectCouponPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.selectCouponPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+			    	name,
+			    	hp, 
+			    	point, 
+			    	qty, 
+			    	addr,
+			    	regdt,
+			    	regid, 
+			    	moddt,
+			    	modid, 
+			    	working
+			FROM tb_coupon
+        ]]>
+		<where>
+			1 = 1
+			<include refid="getCouponSearch" />
+		</where>        
+		ORDER BY SEQ DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="nextSeq" resultType="string">
+		/* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.nextSeq */
+        <![CDATA[
+	        SELECT * 
+	        FROM (
+		        SELECT MAX(seq)+1 
+		        FROM tb_customer
+	        ) tb
+		]]>
+	</select>
+	
+	<update id="mergeCsCenter" parameterType="com.main.web.brand.cscenter.web.vo.CsCenterVo">
+		/* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.mergeCsCenter */
+        <![CDATA[
+        	INSERT INTO 
+        		tb_customer (
+        			seq,
+					code, 
+					cate,
+				    title, 
+				    name, 
+				    email,
+				    hp, 
+				    feedkind,
+				    contents,
+				    working,
+				    regdt,
+				    moddt,
+				    filename1,
+				    answeryn, 
+				    visitstore,
+				    visitdate,
+				    uparea,
+				    upprice,
+				    storetype,
+				    storeyn
+                )
+                VALUES (
+                	#{seq},
+                	#{code},
+                	#{cate},
+                	#{title},
+                	#{name},
+                	#{email},
+                	#{hp},
+                	#{feed_kind},
+                	#{conts},
+                	#{working},
+                	now(),
+                	now(),
+                	#{f_file1_txt},
+                	#{answeryn},
+                	#{visitstore},
+                	#{visitdate},
+                	#{uparea},
+                	#{upprice},
+                	#{storetype},
+                	#{storeyn}
+                )
+        ]]>
+    </update>
+    
+    <select id="selectCustomerView" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.selectCustomerView */
+        <![CDATA[
+	        SELECT seq,
+					cate, 
+					ifnull( (Select name FROM tb_code_mgt WHERE CODE = cate ), '') AS catenm,
+					ifnull(visitstore,'') as visitstore ,
+				    ifnull(visitdate,'') as visitdate , 
+				    name, 
+				    hp,
+				    email,
+				    ifnull(feedkind,'') as feedkind ,
+				    title,
+				    contents,
+				    ifnull(filename1, '') as filename1,
+				    filename2,
+				    filename3,
+				    filename4,
+				    filename5,
+				    working,
+				    answerid,
+				    uparea,
+				    upprice,
+				    storetype,
+				    storeyn,
+				    answeryn,
+				    now() AS nowdt,
+				    answer
+				FROM tb_customer
+		]]>
+		WHERE code = #{code}
+		<if test="seq != null and seq != ''">
+			AND seq = #{seq}
+		</if>
+	</select>
+	
+	<update id="mergeCustomer" parameterType="hashmap">
+		/* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.mergeCustomer */
+        <![CDATA[
+        	UPDATE
+        		tb_customer
+        	SET answer=#{answer},
+        		answeryn=#{answeryn},
+        		answerdt=now(),
+        		answerid=#{modid},
+        		working=#{working}
+        ]]>
+        WHERE code = #{code}
+        <if test="seq != null and seq != ''">
+			AND seq = #{seq}
+		</if>
+    </update>
+    
+    <update id="mergeMileage" parameterType="hashmap">
+		/* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.mergeMileage */
+        <![CDATA[
+        	INSERT INTO 
+        		tb_point (
+        			seq,
+					cardno, 
+					apoint,
+				    hp, 
+				    bpoint, 
+				    totpoint,
+				    regdt, 
+				    regid,
+				    moddt,
+				    modid,
+				    working
+                )
+                VALUES (
+                	#{seq},
+					#{cardno}, 
+					#{apoint},
+				    #{hp}, 
+				    #{bpoint}, 
+				    #{totpoint},
+				    now(), 
+				    #{regid},
+				    now(),
+				    #{modid},
+				    #{working}
+                )
+        ]]>
+    </update>
+
+	<update id="mergeCoupon" parameterType="hashmap">
+		/* ProgramID=com.main.admin.customer.service.impl.CustomerMapper.mergeCoupon */
+        <![CDATA[
+        	INSERT INTO 
+        		tb_coupon (
+        			seq,
+					name, 
+					hp,
+				    point, 
+				    qty, 
+				    addr,
+				    regdt, 
+				    regid,
+				    moddt,
+				    modid,
+				    working
+                )
+                VALUES (
+                	#{seq},
+					#{name}, 
+					#{hp},
+				    #{point}, 
+				    #{qty}, 
+				    #{addr},
+				    now(), 
+				    #{regid},
+				    now(),
+				    #{modid},
+				    #{working}
+                )
+        ]]>
+    </update>
+    
+    <select id="selectTbPointMerge" parameterType="hashmap" resultType="hashmap">
+    	/* ProgramID=com.main.admin.customer.service.impl.CustomerMappers.selectTbPointMerge */
+    	<![CDATA[
+    		SELECT seq
+    			 , cardno
+    			 , apoint
+    			 , hp
+    		 FROM tb_point
+    		WHERE seq IN
+    	]]>
+    	<foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </select>
+    
+    <update id="updateApplyPoint" parameterType="hashmap">
+		/* ProgramID=com.main.admin.customer.service.impl.CustomerMappers.updateApplyPoint */
+        <![CDATA[
+        	UPDATE tb_point
+        	SET working = #{applyyn}
+        	WHERE seq = #{seq}
+        ]]>
+    </update>
+    
+    <update id="updateApplyCoupon" parameterType="hashmap">
+		/* ProgramID=com.main.admin.customer.service.impl.CustomerMappers.updateApplyCoupon */
+        <![CDATA[
+        	UPDATE tb_coupon
+        	SET working = #{applyyn}
+        	WHERE seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+    
+</mapper>

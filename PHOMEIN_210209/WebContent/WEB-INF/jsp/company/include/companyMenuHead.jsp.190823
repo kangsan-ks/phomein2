@@ -1,0 +1,100 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+		<!-- location-menu -->
+		<div class="location-menu">
+			<div class="inner">
+				<a href="/company/main/main.do" class="btn-home"></a>
+				<!-- nav -->
+				<div class="nav">
+					<ul>
+						<li class="depth01">
+							<a href="javascript:;" class="nav-title"></a>
+							<ul class="nav-list">
+								<li id="회사소개"><a href="/company/company/dailyking.do">회사소개</a></li>
+								<li id="연구개발"><a href="/company/rnd/phoseason.do">연구개발</a></li>
+								<li id="가맹개설정보"><a href="/company/franchisee/step01.do">가맹개설정보</a></li>
+								<li id="사회공헌"><a href="/company/csr/phoever.do">사회공헌</a></li>
+								<li id="POLICY"><a href="/company/etc/terms.do">POLICY</a></li>
+							</ul>
+						</li>
+						<li class="depth02" style="display:none;">
+							<a href="javascript:;" class="nav-title">회사소개</a>
+							<dd style="display:none;">COMPANY</dd>
+							<ul class="nav-list">
+								<li><a href="/company/company/dailyking.do">(주)데일리킹</a></li>
+								<li><a href="/company/company/phomein.do">포메인</a></li>
+								<!-- 20190426 메뉴 추가 s -->
+								<!-- <li><a href="/eng/phomein/ceo.do">CEO</a></li> -->
+								<!-- //20190426 메뉴 추가 e -->
+								<!-- <li><a href="/company/company/brownsugar.do">패밀리 브랜드</a></li> -->
+								<li><a href="/company/company/ceo.do">CEO 인사말</a></li>
+								<li><a href="/company/company/location.do">오시는 길</a></li>
+							</ul>
+						</li>
+						<li class="depth02" style="display:none;">
+							<a href="javascript:;" class="nav-title">연구개발</a>
+							<dd style="display:none;">RND</dd>
+							<ul class="nav-list">
+								<li><a href="/company/rnd/phoseason.do">포시즌</a></li>
+								<li><a href="/company/rnd/greenfood.do">현대그린푸드 MOU</a></li>
+								<li><a href="/company/rnd/educ.do">전문 교육장</a></li>
+							</ul>
+						</li>
+						<li class="depth02" style="display:none;">
+							<a href="javascript:;" class="nav-title">가맹개설정보</a>
+							<dd style="display:none;">FRANCHISEE</dd>
+							<ul class="nav-list">
+								<li><a href="/company/franchisee/step01.do">가맹 안내</a></li>
+								<li style="display:none;"><a href="/company/franchisee/step02.do">가맹 안내</a></li>
+								<li style="display:none;"><a href="/company/franchisee/step03.do">가맹 안내</a></li>
+								<!-- <li><a href="/company/franchisee/estimate.do">가맹 비용</a></li> -->
+								<li><a href="/company/franchisee/interior.do">인테리어</a></li>
+								<li><a href="/company/franchisee/interview.do">우수매장</a></li>
+								<li><a href="/company/franchisee/terms.do">가맹 상담 신청</a></li>
+								<li style="display:none;"><a href="/company/franchisee/info.do">가맹 상담 신청</a></li>
+							</ul>
+						</li>
+						<li class="depth02" style="display:none;">
+							<a href="javascript:;" class="nav-title">사회공헌</a>
+							<dd style="display:none;">CSR</dd>
+							<ul class="nav-list">
+								<li><a href="/company/csr/phoever.do">CSR</a></li>
+							</ul>
+						</li>
+						<li class="depth02" style="display:none;">
+							<a href="javascript:;" class="nav-title">POLICY</a>
+							<dd style="display:none;">POLICY</dd>
+							<ul class="nav-list">
+								<li><a href="/company/etc/terms.do">이용약관</a></li>
+								<li><a href="/company/etc/privacy.do">개인정보취급방침</a></li>
+								<li><a href="/company/etc/email.do">이메일무단수집거부</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<!-- //nav -->
+			</div>
+		</div>
+		<!-- //location-menu -->
+
+	<script>
+	$(document).ready(function () {
+		var url = fnParsingUrl($(location).attr("pathname"));
+		
+		$(".depth02 ul li a").each(function(index) {
+			if($(this).attr("href") == url){
+				$(this).parent("li").attr("class", "actived"); // depth02 active
+				$(this).closest(".depth02").show(); // depth02 show
+				var aId = $(this).closest(".depth02").children('a').text();
+				$("#"+aId).attr("class", "actived"); // depth01 active
+				$(".depth01").children('a').text(aId); // depth01 text
+				$(this).closest(".depth02").children('a').text($(this).text()); // depth02 text
+			}
+		});
+	});
+	
+	var fnParsingUrl = function(url) {
+		if (url.indexOf('company/franchisee/step') > -1) 		url = '/company/franchisee/step01.do';
+		
+		return url;
+	};
+	</script>

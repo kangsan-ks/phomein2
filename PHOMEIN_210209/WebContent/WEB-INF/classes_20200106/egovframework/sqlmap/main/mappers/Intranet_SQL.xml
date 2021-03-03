@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.intranet.service.impl.IntranetMapper">
+
+
+	<sql id="getSearch">
+		<if test="searchKeyword != null and searchKeyword != ''">
+	        <choose>
+	            <when test="searchCondition == 0">
+	            	AND ( title like CONCAT('%' , #{searchKeyword} , '%') OR contents like CONCAT('%' , #{searchKeyword} , '%') ) 
+	            </when>
+	            <when test="searchCondition == 1">
+	            	AND title like CONCAT('%' , #{searchKeyword} , '%')
+	            </when>
+	            <when test="searchCondition == 2">
+	            	AND contents like CONCAT('%' , #{searchKeyword} , '%')
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="useyn != null and useyn != ''">
+	        <choose>
+	            <when test="useyn == 0">
+	            </when>
+	            <when test="useyn == 1">
+	            	AND useyn = 'Y'
+	            </when>
+	            <when test="useyn == 2">
+	            	AND useyn = 'N'
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="cate != null and cate != ''">
+	        <choose>
+	            <when test="cate == 0">
+	            </when>
+	            <when test="cate == 1">
+	            	AND cate = 'notice'
+	            </when>
+	            <when test="cate == 2">
+	            	AND cate = 'data'
+	            </when> 
+			</choose>
+		</if>
+	</sql>	
+	
+	
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.intranet.service.impl.IntranetMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_in_board A 
+		<where>
+			1 = 1 /*and topview = 'N'*/
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.intranet.service.impl.IntranetMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+			    cate, title, contents,
+			    useyn, topview,
+			    filename1, filename2, filename3, filename4, filename5,
+			    orgfilename1, orgfilename2, orgfilename3, orgfilename4, orgfilename5,
+			    regid, regdt,
+			    modid, moddt,
+			    hitcnt
+			FROM tb_in_board
+        ]]>
+		<where>
+			1 = 1 /*and topview = 'N'*/
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectTopList" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.intranet.service.impl.IntranetMapper.selectTopList */
+		SELECT seq,
+		    cate, title, contents,
+		    useyn, topview,
+		    filename1, filename2, filename3, filename4, filename5,
+			orgfilename1, orgfilename2, orgfilename3, orgfilename4, orgfilename5,
+		    regid, regdt,
+		    modid, moddt,
+		    hitcnt
+		FROM tb_in_board
+		<where>
+			topview = 'Y'
+			<include refid="getSearch" />
+		</where>
+		Order by seq DESC
+	</select>
+	
+	<select id="selectInView" parameterType="hashmap" resultType="hashmap">
+		/*  ProgramID=com.main.admin.intranet.service.impl.IntranetMapper.selectInView */
+		SELECT 
+			seq,
+			    cate, title, contents,
+			    useyn, topview,
+			    filename1, filename2, filename3, filename4, filename5,
+			    orgfilename1, orgfilename2, orgfilename3, orgfilename4, orgfilename5,
+			    regid, regdt,
+			    modid, moddt,
+			    hitcnt
+		FROM tb_in_board where seq = #{seq}
+	</select>
+	
+	<insert id="insert" parameterType="hashmap">
+		/* Intranet Insert */
+		Insert into tb_in_board ( cate, title, contents, useyn, topview, 
+				filename1, orgfilename1, filename2, orgfilename2, filename3, orgfilename3, filename4, orgfilename4, filename5, orgfilename5, regid, regdt, hitcnt ) Values
+			    ( #{cate}, #{title}, #{contents}, #{useyn}, #{topview},
+			    #{filename1}, #{orgfilename1}, #{filename2}, #{orgfilename2}, #{filename3}, #{orgfilename3}, #{filename4}, #{orgfilename4}, #{filename5}, #{orgfilename5}, #{regid}, now(), 0 )			    
+	</insert>
+	
+	<update id="update" parameterType="hashmap">
+		/* Intranet Update */
+		Update tb_in_board Set
+			cate = #{cate}, 
+			title = #{title}, 
+			contents = #{contents},
+		    useyn = #{useyn}, 
+		    topview = #{topview},
+		    <if test="filename1 != null and filename1 != ''">
+		    filename1 = #{filename1},
+		    orgfilename1 = #{orgfilename1},
+		    </if>
+		    <if test="file01_del != null and file01_del != ''">
+			filename1 = '',
+			orgfilename1 = '',
+			</if>
+		    <if test="filename2 != null and filename2 != ''">
+		    filename2 = #{filename2}, 
+		    orgfilename2 = #{orgfilename2},
+		    </if>
+		    <if test="file02_del != null and file02_del != ''">
+			filename2 = '',
+			orgfilename2 = '',
+			</if>
+		    <if test="filename3 != null and filename3 != ''">
+		    filename3 = #{filename3},
+		    orgfilename3 = #{orgfilename3}, 
+		    </if>
+		    <if test="file03_del != null and file03_del != ''">
+			filename3 = '',
+			orgfilename3 = '',
+			</if>
+		    <if test="filename4 != null and filename4 != ''">
+		    filename4 = #{filename4},
+		    orgfilename4 = #{orgfilename4}, 
+		    </if>
+		    <if test="file04_del != null and file04_del != ''">
+			filename4 = '',
+			orgfilename4 = '',
+			</if>
+		    <if test="filename5 != null and filename5 != ''">
+		    filename5 = #{filename5},
+		    orgfilename5 = #{orgfilename5},
+		    </if>
+		    <if test="file05_del != null and file05_del != ''">
+			filename5 = '',
+			orgfilename5 = '',
+			</if>
+		    modid = #{modid}, 
+		    moddt = now()
+		Where
+			seq = #{seq}
+	</update>
+	
+	<update id="updatecnt" parameterType="hashmap">
+		/* Intranet Update */
+		Update tb_in_board Set
+			hitcnt  = hitcnt + 1
+		where 
+			seq = #{seq}
+	</update>
+	
+	<update id="updateuseyn" parameterType="hashmap">
+		/* Intranet Update */
+		Update tb_in_board Set
+			useyn = #{useyn}
+		where 
+			seq = #{seq}
+	</update> 
+	
+	<delete id="delete" parameterType="hashmap">
+		/* Intranet Delete*/
+		Delete from tb_in_board
+		Where seq = #{seq}
+	</delete>
+	
+	
+	<update id="updateUseYns" parameterType="hashmap">
+        <![CDATA[
+        	UPDATE tb_in_board
+        	SET useyn = #{useyn}
+        	WHERE seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+    	
+</mapper>

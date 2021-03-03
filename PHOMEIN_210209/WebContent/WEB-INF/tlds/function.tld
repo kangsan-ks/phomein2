@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
+    
+    <tlib-version>1.2</tlib-version>
+    <jsp-version>1.2</jsp-version>
+    <uri></uri>
+    
+    <function>
+        <name>codeList</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.util.Map getCodeList(java.lang.String)
+        </function-signature>
+    </function>
+    
+    <function>
+        <name>codeListSub</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.util.Map getCodeListSub(java.lang.String)
+        </function-signature>
+    </function>    
+    
+     <function>
+        <name>codeValue</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.lang.String getCodeNm(java.lang.String)
+        </function-signature>
+    </function>
+
+    <function>
+        <name>menuList</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.util.Map getMenuNmFirst(java.lang.String)
+        </function-signature>
+    </function>    
+    
+    <function>
+        <name>menuListSub</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.util.Map getMenuListSub(java.lang.String)
+        </function-signature>
+    </function>    
+    
+    
+	<function>
+        <name>priceList</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.util.Map getPriceList(java.lang.String)
+        </function-signature>
+    </function> 
+	<function>
+        <name>priceDetailList</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.util.Map getPriceDetailList(java.lang.String, int)
+        </function-signature>
+    </function> 
+    
+    
+    <function>
+        <name>decode</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.lang.String getDecode(java.lang.String)
+        </function-signature>
+    </function>
+    
+    <function>
+        <name>clobToString</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.lang.String clobToString(java.sql.Clob)
+        </function-signature>
+    </function>
+
+<!-- 
+    <function>
+        <name>keys</name>
+        <function-class>com.main.cmmn.resource.CmmnCodeResource</function-class>
+        <function-signature>
+            java.util.Iterator getKeys()
+        </function-signature>
+    </function>
+ -->
+ 
+    
+    <function>
+        <name>cutString</name>
+        <function-class>com.main.cmmn.util.EasyString</function-class>
+        <function-signature>
+            java.lang.String cutString(java.lang.String, int, java.lang.String, )
+        </function-signature>
+    </function>
+    <function>
+        <name>removeHTML</name>
+        <function-class>com.main.cmmn.util.EasyString</function-class>
+        <function-signature>
+            java.lang.String removeHTML(java.lang.String)
+        </function-signature>
+    </function>
+    
+    <!-- New -->
+    <function>
+        <name>Contents</name>
+        <function-class>com.main.cmmn.util.CommonUtil</function-class>
+        <function-signature>
+            java.lang.String nl2br(java.lang.String)
+        </function-signature>
+    </function>
+    
+    <function>
+        <name>xssContents</name>
+        <function-class>com.main.cmmn.util.CommonUtil</function-class>
+        <function-signature>
+            java.lang.String xssFilter(java.lang.String)
+        </function-signature>
+    </function>
+    
+    <function>
+        <name>setStar</name>
+        <function-class>com.main.cmmn.util.CommonUtil</function-class>
+        <function-signature>
+            java.lang.String setStar(java.lang.String, int)
+        </function-signature>
+    </function>        
+    
+    <function>
+        <name>fillZero</name>
+        <function-class>com.main.cmmn.util.EasyString</function-class>
+        <function-signature>
+            java.lang.String fillZero(int, int)
+        </function-signature>
+    </function>    
+    <function>
+        <name>replace</name>
+        <function-class>com.main.cmmn.util.EasyString</function-class>
+        <function-signature>
+            java.lang.String replace(java.lang.String, java.lang.String, java.lang.String)
+        </function-signature>
+    </function>
+    
+    
+</taglib>

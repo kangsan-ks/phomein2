@@ -1,0 +1,87 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+	<div id="gnb">
+		<div class="gnb_head">
+			<div class="lang">
+				<ul>
+					<li class="on"><a href="/mcompany/main/main.do">KOR</a></li>
+					<li><a href="/meng/main/main.do" target="_self">ENG</a></li>
+					<li><a href="/mjpn/main/main.do" target="_self">JPN</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="gnb_container">
+			<div class="inner">
+				<nav class="gnb_menu">
+					<ul>
+						<li><!-- 현재 뎁스 표시 : class="on" -->
+							<a href="#none">회사소개</a>
+							<ul class="gnbs">
+								<li><a href="/mcompany/company/dailyking.do">㈜데일리킹</a></li><!-- 현재 뎁스 표시 : class="on" -->
+								<li><a href="/mbrand/main/main.do">포메인 사이트</a></li>
+								<li><a href="/mcompany/company/phomein.do">포메인</a></li>
+								<li><a href="/mcompany/franchisee/red.do">포메인 RED</a></li>
+								<!-- 20190426 메뉴 추가 s -->
+								<li><a href="/mcompany/company/ceo.do">CEO</a></li>
+								<!-- //20190426 메뉴 추가 e -->
+								<!--
+								<li><a href="/mcompany/company/brownsugar.do">패밀리 브랜드</a></li> -->
+								<li><a href="/mcompany/company/location.do">오시는 길</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="#none">연구개발</a>
+							<ul class="gnbs">
+								<li><a href="/mcompany/rnd/phoseason.do">포시즌</a></li>
+								<li><a href="/mcompany/rnd/greenfood.do">현대그린푸드 MOU</a></li>
+								<li><a href="/mcompany/rnd/educ.do">전문교육장</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="#none">가맹개설정보</a>
+							<ul class="gnbs">
+								<li><a href="/mcompany/franchisee/status.do">가맹 안내</a></li>
+								<li style="display:none;"><a href="/mcompany/franchisee/system.do">가맹 안내</a></li>
+								<li style="display:none;"><a href="/mcompany/franchisee/step.do">가맹 안내</a></li>
+								<!--
+								<li><a href="/mcompany/franchisee/estimate.do">가맹 비용</a></li> -->
+								<li><a href="/mcompany/franchisee/interior.do">인테리어</a></li>
+								<!-- <li><a href="/mcompany/franchisee/interview.do">우수매장</a></li> -->
+								<li><a href="/mcompany/franchisee/terms.do">가맹 상담 신청</a></li>
+								<li style="display:none;"><a href="/mcompany/franchisee/info.do">가맹 상담 신청</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="#none">사회공헌</a>
+							<ul class="ea1 gnbs">
+								<li><a href="/mcompany/csr/phoever.do">CSR</a></li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<button type="button" class="btn_close">
+			<span class="blind">전체메뉴 닫기</span>
+		</button>
+	</div>
+
+	<script>
+	$(document).ready(function () {
+		var url = $(location).attr("pathname");
+		$('.gnb_menu ul li').removeClass("on"); // depth01 all active remove
+		$('.gnbs li').removeClass("on"); // depth02 all active remove
+
+		$('.gnbs li a').each(function(index) {
+			if($(this).attr("href") == url){
+				var $text = $(this).text();
+				$(this).closest('.gnbs').find("li a").each(function(){
+					if($text== $(this).text()) {
+						$(this).parent("li").attr("class", "on"); // depth02 active
+						$(this).closest('.gnbs').parent("li").attr("class", "on"); // depth01 active
+						return false;
+					}
+				});
+			}
+		});
+	});
+	</script>

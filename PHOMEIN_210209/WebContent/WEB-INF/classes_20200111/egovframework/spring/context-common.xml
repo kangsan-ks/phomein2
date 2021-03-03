@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+
+    xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
+
+
+    <context:component-scan base-package="com">
+       <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+	<util:properties id="defaultProperty" location="classpath:/egovframework/property/default.properties"/>
+
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:/egovframework/message/message-common</value>
+				<value>classpath:/egovframework/rte/fdl/idgnr/messages/idgnr</value>
+				<value>classpath:/egovframework/rte/fdl/property/messages/properties</value>
+			</list>
+		</property>
+		<property name="cacheSeconds">
+			<value>60</value>
+		</property>
+	</bean>
+	
+	<bean id="leaveaTrace" class="egovframework.rte.fdl.cmmn.trace.LeaveaTrace">
+		<property name="traceHandlerServices">
+			<list>
+				<ref bean="traceHandlerService" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="traceHandlerService" class="egovframework.rte.fdl.cmmn.trace.manager.DefaultTraceHandleManager">
+		<property name="reqExpMatcher">
+			<ref bean="antPathMater" />
+		</property>
+		<property name="patterns">
+			<list>
+				<value>*</value>
+			</list>
+		</property>
+		<property name="handlers">
+			<list>
+				<ref bean="defaultTraceHandler" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="antPathMater" class="org.springframework.util.AntPathMatcher" />
+	<bean id="defaultTraceHandler" class="egovframework.rte.fdl.cmmn.trace.handler.DefaultTraceHandler" />
+	
+	<bean class="com.main.cmmn.resource.CmmnCodeResource">
+		<property name="cmmnService" ref="cmmnService" />
+	</bean>	 	
+	
+	<!-- Multipart Resolver 최대 100메가 바이트(정확히 100메가는 아니지만)까지 업로드가 가능하도록 설정 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="50000000" />
+		<property name="maxInMemorySize" value="50000000" />
+	</bean>
+
+	<bean id="ftpUpload" class="com.main.cmmn.util.ftp.FtpUpload">
+		<property name="ip" value="127.0.0.1" />
+		<property name="port" value="21" />
+		<property name="id" value="root" />
+		<property name="password" value="1111" />
+	</bean>	
+	 
+	<!--서버 -->
+	<bean id="webFileUtil" class="com.main.cmmn.util.WebFileUtil">
+		<property name="imagePath" value="/upload" />
+		<property name="uploadPath" value="/www/phomein_com/www/upload" />
+		<property name="downloadPath" value="/www/phomein_com/www" />
+	</bean>
+	
+	<bean id="productValidator" class="com.main.admin.menu.web.validate.ProductValidate"/>
+
+	<bean id="redProductValidator" class="com.main.admin.menu.web.validate.RedProductValidate"/>
+	
+	<bean id="phoeverValidator" class="com.main.admin.site.web.validate.PhoeverValidate"/>
+	
+	<bean id="popupValidator" class="com.main.admin.site.web.validate.PopupValidate"/>
+	
+	<bean id="interviewValidator" class="com.main.admin.site.web.validate.InterviewValidate"/>
+	
+	<bean id="codeValidator" class="com.main.admin.comm.web.validate.CodeValidate"/>
+	
+	<bean id="menuValidator" class="com.main.admin.comm.web.validate.MenuValidate"/>
+	
+	<bean id="csCenterValidator" class="com.main.web.brand.cscenter.web.validate.CsCenterValidate"/>
+	
+	<bean id="anotherCsCenterValidator" class="com.main.web.eng.community.web.validate.AnotherCsCenterValidate"/>
+	
+	<bean id="termsValidator" class="com.main.web.company.franchisee.web.validate.TermsValidate"/>
+	
+</beans>

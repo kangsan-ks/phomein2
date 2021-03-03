@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<meta name="keywords" content="">
+<title>포메인</title>
+<link rel="stylesheet" type="text/css" href="../common/css/font.css">
+<link rel="stylesheet" type="text/css" href="../common/css/common.css">
+<link rel="stylesheet" type="text/css" href="../common/css/layout.css">
+<link rel="stylesheet" type="text/css" href="../common/css/content.css">
+<!--[if lt IE 9]>
+	<script src="../common/js/placeholders.min.js"></script>
+	<script src="../common/js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+<!-- wrap -->
+<div id="wrap">
+	<!-- skip nav -->
+	<div id="skip_nav">
+        <a href="#content">본문 바로가기</a>
+    </div>
+    <!-- //skip nav -->
+	<!-- header -->
+	<header id="header">
+		<h1>
+			<a href="#none"><span class="blind">PHOMEIN</span></a>
+		</h1>
+		<div class="allmenu">
+			<button type="button" class="btn_allmenu"><span class="blind">All Menu</span></button>
+		</div>
+	</header>
+	<!-- //header -->
+	<!-- gnb -->
+	<div id="gnb">
+	</div> 
+	<!-- //gnb -->
+	<!-- container -->
+	<div id="container">
+		<!-- sub visual -->
+		<div class="sub_visual sv4">
+			<h3>CS CENTER</h3>
+		</div>
+		<!-- 상단비쥬얼 영역
+			PHOMEIN   : class="sub_visual sv1"
+			MENU	  : class="sub_visual sv2"
+			STORE 	  : class="sub_visual sv3"
+			COMMUNITY : class="sub_visual sv4"
+			FRANCHISE : class="sub_visual sv5"
+		-->
+		<!-- //sub visual -->
+		<!-- lnb -->
+		<div class="lnb">
+			<div class="dep dep1">
+				<a href="#none">コミュニティ</a>
+				<ul class="dep_list">
+					<li><a href="#none">PHOMEIN</a></li>
+					<li><a href="#none">メニュー</a></li>
+					<li><a href="#none">STORE</a></li>
+					<li><a href="#none">コミュニティ</a></li>
+					<li><a href="#none">FRANCHISE</a></li>
+				</ul>
+			</div>
+			<div class="dep dep2">
+				<a href="#none">CS CENTER</a>
+				<ul class="dep_list">
+					<li><a href="#none">SNS</a></li>
+					<li><a href="#none">CS CENTER</a></li>
+				</ul>
+			</div>
+		</div> 
+		<!-- //lnb -->
+		<!-- content -->
+		<div id="content" class="community">
+ 			
+ 			<!-- 타이틀 영역 -->
+ 			<div class="tit_area pb0">
+				<h4>등록하기</h4>
+				<span class="txt"><strong class="ico_import">*</strong> 는 필수입력/선택 항목입니다.</span>
+			</div>
+			<!-- //타이틀 영역 -->
+ 			
+			<!-- 등록 영역 -->
+			<div class="write_area">
+				<table class="table_write">
+					<caption></caption>
+					<colgroup>
+						<col width="26.8%">
+						<col width="auto">
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope="row"><strong class="ico_import">제목</strong></th>
+							<td><input type="text" class="text" placeholder="제목을 입력하세요" title="제목"></td>
+						</tr>
+						<tr>
+							<th scope="row"><strong class="ico_import">内容</strong></th>
+							<td><textarea class="text" cols="30" rows="5" placeholder="내용을 입력하세요" title="내용"></textarea></td>
+						</tr>
+						<tr>
+							<th scope="row"><strong class="ico_import">お名前</strong></th>
+							<td><input type="text" class="text" placeholder="이름을 입력하세요" title="이름"></td>
+						</tr>
+						<tr>
+							<th scope="row"><strong class="ico_import">連絡先</strong></th>
+							<td>
+								<!-- 셀렉트 박스 -->
+								<span class="selectbox tel_sel">
+									<label for="selTel">연락처 앞자리</label>
+									<select id="selTel">
+										<option>010</option>
+										<option>011</option>
+									</select>
+								</span>
+								<!-- //셀렉트 박스 -->
+								<input type="text" class="text tel_txt" maxlength="4" title="연락처 중간자리"> <input type="text" class="text tel_txt" maxlength="4" title="연락처 끝자리">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><strong class="ico_import">Eメール</strong></th>
+							<td>
+								<input type="text" class="text email_txt1" title="이메일"> <span class="email_at">@</span>
+								<input type="text" class="text email_txt2" title="이메일 도메인">
+								<!-- 셀렉트 박스 -->
+								<span class="selectbox email_sel">
+									<label for="selEmail">선택하세요</label>
+									<select id="selEmail">
+										<option selected="selected">선택하세요</option>
+										<option value="gmail.com">gmail.com</option>
+										<option value="naver.com">naver.com</option>
+										<option value="direct">직접입력</option>
+									</select>
+								</span>
+								<!-- //셀렉트 박스 -->
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- 버튼 영역 -->
+				<div class="btn_area">
+					<a href="#none" class="btn_tyf c_black">확인</a>
+				</div>
+				<!-- //버튼 영역 -->
+			</div>
+			<!-- //등록 영역 -->
+			
+		</div>
+		<!-- //content -->
+	</div> 
+	<!-- //container -->
+	<!-- footer -->
+	<footer id="footer">
+		<div class="family_site">
+			<a href="#none">Family Site :<span class="txt_brown"><span class="blind">BROWN SUGAR</span></span></a>
+		</div>
+		<ul class="foot_menu">
+			<li><a href="#none">브랜드 제휴 문의</a></li>
+			<li><a href="#none">가맹문의</a></li>
+			<li><a href="#none"><span class="sys">포메인 지원 시스템</span></a></li>
+		</ul>
+		<p class="copyright">
+			가맹문의  대표번호: 1899-2422(연결 1번)<br>
+			직통번호: 031-780-1500 | 이메일: help@phomein.com<br>
+			COPYRIGHT© DAILYKING INC. ALL RIGHT RESERVED.
+		</p>
+ 	</footer>
+	<!-- //footer -->
+</div>
+<!-- //wrap -->
+<script src="../common/js/jquery-1.12.4.min.js"></script>
+<script src="../common/js/swiper.min.js"></script>
+<script src="../common/js/common.js"></script>
+</body>
+</html>

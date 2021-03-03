@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.intranet.service.impl.DesignMapper">
+
+	<!-- 검색 조건 -->
+	<sql id="getSearch">
+		<if test="searchKeyword != null and searchKeyword != ''">
+	        <choose>
+	            <when test="searchCondition == 0">
+	            	AND ( title like CONCAT('%' , #{searchKeyword} , '%') OR contents like CONCAT('%' , #{searchKeyword} , '%') ) 
+	            </when>
+	            <when test="searchCondition == 1">
+	            	AND title like CONCAT('%' , #{searchKeyword} , '%')
+	            </when>
+	            <when test="searchCondition == 2">
+	            	AND contents like CONCAT('%' , #{searchKeyword} , '%')
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="useyn != null and useyn != ''">
+	        <choose>
+	            <when test="useyn == 0">
+	            </when>
+	            <when test="useyn == 1">
+	            	AND useyn = 'Y'
+	            </when>
+	            <when test="useyn == 2">
+	            	AND useyn = 'N'
+	            </when>	            	            
+			</choose>
+		</if>
+	</sql>	
+
+	<!-- 디자인발주신청관리 : 총 갯수  -->
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.intranet.service.impl.DesignMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_design A 
+		<where>
+			1 = 1 and cate = #{cate}
+			<include refid="getSearch" />
+		</where>
+	</select>
+	
+	<!-- 디자인발주신청관리 : 페이징 목록  -->	
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.intranet.service.impl.DesignMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT x.seq,
+			    x.cate,
+			    x.title,
+			    x.contents,
+			    x.thimg,
+			    x.priceuse,
+			    x.regid,
+			    x.regdt,
+			    x.modid,
+			    x.moddt,
+			    x.useyn,
+			    ( select filename from tb_design_file where useq = x.seq limit 1 ) as filename, 
+			    ( SELECT COUNT(*) FROM tb_design_price WHERE useq = x.seq ) AS cnt 
+			FROM tb_design x
+        ]]>
+		<where>
+			1 = 1 and cate = #{cate}
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<!-- 디자인발주신청관리 : 상세  -->
+	<select id="selectDesignView"  parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.intranet.service.impl.DesignMapper.selectDesignView */
+			SELECT x.seq,
+			    x.cate,
+			    x.title,
+			    x.contents,
+			    x.thimg,
+			    x.priceuse,
+			    x.regid,
+			    x.regdt,
+			    x.modid,
+			    x.moddt,
+			    x.useyn,
+			    ( SELECT COUNT(*) FROM tb_design_price WHERE useq = x.seq ) AS cnt,
+			    (SELECT name FROM tb_admin where adminid = x.regid ) as name 
+			FROM tb_design x
+			where x.seq = #{seq}     
+	</select>
+
+	<!-- 디자인 발주 : 파일 목록  -->
+	<select id="selectDesignOrderFileView"  parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.intranet.service.impl.DesignMapper.selectDesignOrderFileView */
+			SELECT seq,
+			    useq, cate, filename, filedec, regdt
+			FROM tb_design_file
+			where useq = #{useq}     
+	</select>
+	<!-- 디자인 발주 : 종류 금액 목록  -->
+	<select id="selectDesignOrderPriceView"  parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.intranet.service.impl.DesignMapper.selectDesignOrderPriceView */
+			SELECT seq, useq,
+			    options, price
+			FROM tb_design_price
+			where useq = #{useq}     
+			ORDER BY seq ASC
+	</select>	
+	<!-- 디자인 발주 신청 관리 : 정보 등록  -->
+	<insert id="insert" parameterType="hashmap" >
+		<selectKey resultType="long" order="AFTER" keyProperty="seq">
+	        SELECT LAST_INSERT_ID() as seq
+	    </selectKey>
+		Insert into tb_design ( cate, title, contents, thimg, priceuse, regid, regdt, useyn )
+		values
+		( #{cate}, #{title}, #{contents}, #{thimg}, #{priceuse}, #{regid}, now(), #{useyn} )
+	</insert>
+	<!-- 디자인 발주 신청 관리 : 파일 등록  -->
+	<insert id="fileInsert"  parameterType="hashmap">
+		insert into tb_design_file ( useq, cate, filename, filedec, regdt )
+		values
+		( #{useq}, #{cate}, #{filename}, #{filedec}, now() )
+	</insert>
+	<!-- 디자인 발주 신청 관리 : 종류 금액 등록  -->
+	<insert id="priceInsert" parameterType="hashmap">
+		insert into tb_design_price ( useq, options, price )
+		values
+		( #{useq}, #{options}, #{price} )
+	</insert>
+	
+	<!-- 디자인 발주 신청 관리 : 수정 / 삭제 Start  -->
+	<update id="update"  parameterType="hashmap">
+		update tb_design set
+			cate = #{cate}, 
+			title = #{title}, 
+			contents = #{contents}, 
+			thimg = #{thimg}, 
+			priceuse = #{priceuse},
+			modid = #{modid},
+			moddt = now(),
+			useyn = #{useyn}
+		where seq = #{seq}
+	</update>
+	
+	<update id="fileUpdate" parameterType="hashmap">
+		update tb_design_file set
+			cate = #{cate}, 
+			filename = #{filename}, 
+			filedec = #{filedec} 
+		where 
+			seq = #{seq}
+			and useq = #{useq}
+	</update>
+	
+	<update id="priceUpdate" parameterType="hashmap">
+		update tb_design_price set
+			options = #{options}, 
+			price = #{price} 
+		where 
+			seq = #{seq}
+	</update>
+	
+	<delete id="fileD" parameterType="hashmap">
+		delete from tb_design_file where useq = #{useq}
+	</delete>
+	
+	<delete id="priceD" parameterType="hashmap">
+		delete from tb_design_price where seq = #{seq}
+	</delete>
+	<!-- 디자인 발주 신청 관리 : 수정 / 삭제 END  -->
+
+	
+	
+	<!-- 디자인발주신청 : 전체 목록  -->
+	<select id="selectList" parameterType="hashmap" resultType="hashmap">
+		SELECT x.seq,
+			    x.cate,
+			    x.title,
+			    x.contents,
+			    x.thimg,
+			    x.priceuse,
+			    x.regid,
+			    x.regdt,
+			    x.modid,
+			    x.moddt,
+			    x.useyn,
+			    ( select filename from tb_design_file where useq = x.seq limit 1 ) as filename, 
+			    ( SELECT COUNT(*) FROM tb_design_price WHERE useq = x.seq ) AS cnt 
+		FROM tb_design x
+		WHERE x.useyn = 'Y' and x.cate = #{cate}
+		ORDER BY seq DESC
+	</select>	
+	
+	<!-- 디자인/물품 발주 신청 등록 -->
+	<insert id="oderInsert" parameterType="hashmap" >
+		<selectKey resultType="long" order="AFTER" keyProperty="seq">
+	        SELECT LAST_INSERT_ID() as seq
+	    </selectKey>
+		Insert into tb_design_order
+			( cate, title, name, contents, store, storename, regid, regdt, totalprice, paydt, status,manager, gubun, kind, vat, movepay, price, filename, orgname, filename2, orgname2, filename3, orgname3, filename4, orgname4, filename5, orgname5 )
+			values
+			( #{cate}, #{title}, #{name}, #{contents}, #{store}, #{storename}, #{regid}, now() , #{totalprice}, #{paydt}, #{status}, #{manager}, #{gubun}, #{kind}, #{vat},#{movepay},#{price}, #{filename}, #{orgname}, #{filename2}, #{orgname2}, #{filename3}, #{orgname3}, #{filename4}, #{orgname4}, #{filename5}, #{orgname5} )
+	</insert>
+	
+	<insert id="orderdetailInsert" parameterType="hashmap" >
+		insert into tb_design_orderdetail 
+			( orderseq, productseq, detailseq, ea, regdt )
+			values
+			( #{orderseq}, #{productseq}, #{detailseq}, #{ea}, now() )
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	<!-- 디자인 발주 신청 검색  -->
+	<sql id="getSearch2">
+		<if test="searchKeyword != null and searchKeyword != ''">
+	        <choose>
+	            <when test="searchCondition == 0">
+	            	AND ( X.title like CONCAT('%' , #{searchKeyword} , '%') OR X.contents like CONCAT('%' , #{searchKeyword} , '%') ) 
+	            </when>
+	            <when test="searchCondition == 1">
+	            	AND X.title like CONCAT('%' , #{searchKeyword} , '%')
+	            </when>
+	            <when test="searchCondition == 2">
+	            	AND X.contents like CONCAT('%' , #{searchKeyword} , '%')
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="title != null and title != ''">
+	        AND X.title like CONCAT('%' , #{title} , '%')
+		</if>
+		<if test="storename != null and storename != ''">
+	        AND X.storename like CONCAT('%' , #{storename} , '%')
+		</if>
+		<if test="name != null and name != ''">
+	        AND X.name like CONCAT('%' , #{name} , '%')
+		</if>
+		<if test="adminid != null and adminid != ''">
+	        AND X.regid like CONCAT('%' , #{adminid} , '%')
+		</if>
+		
+		<!-- 등록일 기간 검색 -->          
+		<if test="searchStDt != null and searchEdDt != null">
+			<if test="searchStDt neq ''.toString() and searchEdDt neq ''.toString()">			
+				AND DATE_FORMAT(X.regdt, '%Y-%m-%d') BETWEEN #{ searchStDt } AND #{ searchEdDt }
+			</if>	
+		</if>
+		
+	</sql>	
+	
+	<!-- 디자인 발주 신청 : 총 갯수  -->
+	<select id="selectDesignOrderCnt"  parameterType="hashmap" resultType="int">
+		/* ProgramID=com.main.admin.intranet.service.impl.DesignMapper.selectDesignOrderCnt */
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM 
+			( SELECT X.seq, Y.name 
+				FROM
+			 		tb_design_order X, tb_admin Y
+			 	WHERE X.regid = Y.adminid and X.cate = #{cate}
+			 		<include refid="getSearch2" />
+			 ) A
+	</select>
+	
+	<resultMap id="orderList" type="hashMap" autoMapping="true">
+		<result javaType="java.lang.String" property="cnt" column="cnt" />
+		<result javaType="java.lang.String" property="seq" column="seq" />
+		<result javaType="java.lang.String" property="cate" column="cate" />
+		<result javaType="java.lang.String" property="title" column="title" />
+		<result javaType="java.lang.String" property="name" column="name" />
+		<result javaType="java.lang.String" property="contents" column="contents" />
+		<result javaType="java.lang.String" property="storename" column="storename" />
+		<result javaType="java.lang.String" property="regid" column="regid" />
+		<result javaType="java.lang.String" property="totalprice" column="totalprice" />
+		<result javaType="java.lang.String" property="paydt" column="paydt" />
+		<result javaType="java.lang.String" property="status" column="status" />
+		<result javaType="java.lang.String" property="manager" column="manager" />
+		<result javaType="java.lang.String" property="gubun" column="gubun" />
+		<result javaType="java.lang.String" property="kind" column="kind" />
+		<result javaType="java.lang.String" property="vat" column="vat" />
+		<result javaType="java.lang.String" property="movepay" column="movepay" />
+		<result javaType="java.lang.String" property="price" column="price" />
+		<result javaType="java.lang.String" property="filename" column="filename" />
+		<result javaType="java.lang.String" property="regname" column="regname" />
+		<result javaType="java.lang.String" property="upfile" column="upfile" />
+		<result javaType="java.lang.String" property="orgname" column="orgname" />
+		<collection property="productList"  column="{orderseq=seq}" javaType="java.util.ArrayList" select="detailList" />
+	</resultMap>
+	  
+	<!-- 디자인 발주 신청 : 페이징 목록 -->
+	<select id="selectDesignOrderList"  parameterType="hashmap" resultMap="orderList">
+		/* ProgramID=com.main.admin.intranet.service.impl.DesignMapper.selectDesignOrderList */
+			SELECT T.* FROM     
+			<if test="options != null and options != ''">
+			(SELECT * FROM      
+			</if>
+				(SELECT A.*,      
+					(select count(r.seq) from tb_design_reply r where r.useyn='Y' and r.useq = A.seq) as cnt       
+		            FROM 
+		            (SELECT X.seq, X.cate, X.title, X.name, X.contents, X.store, X.storename, X.regid, X.regdt, X.totalprice,X.paydt, X.status, X.manager, X.gubun, X.kind, X.vat, X.movepay, X.price,           
+						(SELECT f.filename FROM tb_design_file f WHERE f.useq = X.seq ORDER BY f.filedec ASC LIMIT 1) as filename,           
+						(SELECT name FROM tb_admin where adminid = X.regid ) as regname,           X.filename AS upfile, X.orgname       
+						FROM tb_design_order X
+						<where>
+							1 = 1 and X.cate = #{cate}
+							<include refid="getSearch2"/>
+						</where>
+						ORDER BY X.seq DESC
+		            ) A  
+				<if test="options != null and options != ''">
+				) Y
+				JOIN     
+		        (select orderseq from 
+					tb_design_orderdetail F
+					JOIN
+					(select seq from tb_design_price c where c.options like CONCAT('%', #{options}, '%')) G
+		            on F.productseq = G.seq
+		        ) Z     
+		        ON Y.seq = Z.orderseq 
+				</if>
+			) T 
+			LIMIT #{startCount}, #{pageUnit}
+	</select>
+	
+	
+	<!-- 디자인 발주 신청 : 상세  -->
+	<select id="selectDesignOrderView"  parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.intranet.service.impl.DesignMapper.selectDesignOrderView */
+			SELECT seq,
+			    cate, title, name, contents, store, storename, regid, regdt, totalprice, paydt, status,manager, gubun, kind,
+			    vat, movepay, price,
+			    (select count(*) from tb_design_price where useq = seq ) as cnt,
+			    (SELECT name FROM tb_admin where adminid = regid ) as name,
+			    filename as upfile, orgname,
+			    filename2 as upfile2, orgname2,
+			    filename3 as upfile3, orgname3,
+			    filename4 as upfile4, orgname4,
+			    filename5 as upfile5, orgname5
+			FROM tb_design_order
+			where seq = #{seq}
+			order by seq desc
+	</select>
+	
+	<resultMap id="buyList" type="hashMap" autoMapping="true">
+		<result javaType="java.lang.String" property="seq" column="seq" />
+		<result javaType="java.lang.String" property="title" column="title" />
+		<result javaType="java.lang.String" property="contents" column="contents" />
+		<result javaType="java.lang.String" property="priceuse" column="priceuse" />
+		<result javaType="java.lang.String" property="filename" column="filename" />
+		<collection property="productList"  column="{orderseq=orderseq}" javaType="java.util.ArrayList" select="detailList" />
+	</resultMap>
+	<resultMap id="products" type="productVO">
+		<result javaType="java.lang.String" property="orderseq" column="orderseq" />
+		<result javaType="java.lang.String" property="productseq" column="productseq" />
+		<result javaType="java.lang.String" property="detailseq" column="detailseq" />
+		<result javaType="java.lang.String" property="ea" column="ea" />
+		<result javaType="java.lang.String" property="regdt" column="regdt" />
+		<result javaType="java.lang.String" property="subtitle" column="subtitle" />
+		<result javaType="java.lang.String" property="options" column="options" />
+		<result javaType="java.lang.String" property="price" column="price" />
+	</resultMap>
+	<select id="selectDesignOrderDetailList" parameterType="hashMap" resultMap="buyList">
+		/* ProgramID=selectDesignOrderDetailList */
+		select x.* from (
+			select 
+				a.seq,
+				a.orderseq,
+				a.detailseq, 
+				a.productseq,
+				( select title from tb_design where seq = a.detailseq ) as title,
+				( select contents from tb_design where seq = a.detailseq ) as contents,
+				( select priceuse from tb_design where seq = a.detailseq ) as priceuse,
+				( select filename from tb_design_file where useq = a.detailseq LIMIT 1 ) as filename
+			from tb_design_orderdetail a 
+			where a.orderseq = #{orderseq}
+			order by a.seq asc
+		) x
+		ORDER BY x.seq asc
+	</select>
+
+	<select id="detailList" parameterType="hashmap" resultMap="products">
+		/* ProgramID=detailList */
+		select 
+			a.seq,
+			a.orderseq, 
+			a.productseq, 
+			a.detailseq, 
+			a.ea, 
+			a.regdt,
+			( SELECT b.title from tb_design b where b.seq = a.detailseq )  as subtitle,
+			( select options from tb_design_price c where c.seq = a.productseq ) as options,
+			( select price from tb_design_price where seq = a.productseq ) as price
+		from tb_design_orderdetail a 
+		where a.orderseq = #{orderseq}
+		order by a.seq asc
+	</select>	
+	
+	<select id="selectdetail" parameterType="hashmap"  resultType="hashmap">
+		select 
+			a.seq,
+			a.orderseq, 
+			a.productseq, 
+			a.detailseq, 
+			a.ea, 
+			a.regdt,
+			( select options from tb_design_price where seq = a.productseq ) as options,
+			( select price from tb_design_price where seq = a.productseq ) as price
+		from tb_design_orderdetail a 
+		where a.orderseq = #{orderseq} 
+		order by a.seq asc
+	</select>
+	
+	
+	
+	<!-- 디자인 발주 신청 수정 -->
+	<delete id="orderdetailDelete" parameterType="hashmap" >
+		delete from tb_design_orderdetail where orderseq = #{orderseq}
+	</delete>
+	<update id="orderUpdate" parameterType="hashmap" >
+		/*	totalprice, paydt, status, gubun, kind, vat, movepay, price */
+		update tb_design_order set
+			title = #{title},
+			name = #{name},
+			paydt = #{paydt},
+			title = #{title},
+			contents = #{conts},
+			totalprice = #{totalprice},
+			<if test="status != null and status != ''">
+			status = #{status},
+			</if>
+			<if test="manager != null and manager != ''">
+			manager = #{manager},
+			</if>
+			gubun = #{gubun}, 
+			kind = #{kind},
+			vat = #{vat}, 
+			movepay = #{movepay}, 
+			<if test="filename != null">
+			filename = #{filename},
+			orgname = #{orgname},
+			</if>
+			<if test="filename2 != null">
+			filename2 = #{filename2},
+			orgname2 = #{orgname2},
+			</if>
+			<if test="filename3 != null">
+			filename3 = #{filename3},
+			orgname3= #{orgname3},
+			</if>
+			<if test="filename4 != null">
+			filename4 = #{filename4},
+			orgname4 = #{orgname4},
+			</if>
+			<if test="filename5 != null">
+			filename5 = #{filename5},
+			orgname5 = #{orgname5},
+			</if>
+<!-- 			<if test="file01_del != null and !file01_del.toString().equals('')"> -->
+<!-- 			filename = '', -->
+<!-- 			orgname = '', -->
+<!-- 			</if> -->
+<!-- 			<if test="file02_del != null and !file02_del.toString().equals('')"> -->
+<!-- 			filename2 = '', -->
+<!-- 			orgname2 = '', -->
+<!-- 			</if> -->
+<!-- 			<if test="file03_del != null and !file03_del.toString().equals('')"> -->
+<!-- 			filename3 = '', -->
+<!-- 			orgname3 = '', -->
+<!-- 			</if> -->
+<!-- 			<if test="file04_del != null and !file04_del.toString().equals('')"> -->
+<!-- 			filename4 = '', -->
+<!-- 			orgname4 = '', -->
+<!-- 			</if> -->
+<!-- 			<if test="file05_del != null and !file05_del.toString().equals('')"> -->
+<!-- 			filename5 = '', -->
+<!-- 			orgname5 = '', -->
+<!-- 			</if> -->
+			price = #{price}
+		where seq = #{seq}
+	</update>
+	
+	
+	
+	<!-- 디자인 댓글 -->
+	<!-- 목록 -->
+	<select id="selectReplyCnt"  parameterType="hashmap" resultType="int">
+		select count(*)
+		from tb_design_reply
+		where useq = #{useq} and useyn = 'Y'
+	</select>
+	<select id="selectReplyPaging" parameterType="hashmap" resultType="hashmap">
+		SELECT T.* FROM (SELECT A.* FROM ( 
+			select 
+				seq, useq, title, contents, filename, orgfilename, useyn, regid, regdt,
+				(select name from tb_admin where adminid = regid ) as name
+			from tb_design_reply
+			where useq = #{useq} and useyn = 'Y'
+		ORDER BY seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	<!-- 등록 -->
+	<insert id="insertReply" parameterType="hashmap">
+		insert into tb_design_reply 
+		( useq, title, contents, filename, orgfilename, useyn, regid, regdt )
+		values
+		( #{useq}, #{title}, #{contents}, #{filename}, #{orgfilename}, #{useyn}, #{regid}, now() )
+	</insert>
+	<!-- 수정 -->
+	<update id="updateReply" parameterType="hashmap">
+		update tb_design_reply set
+			title = #{title},
+			contents = #{contents},
+			filename = #{filename},
+			orgfilename = #{orgfilename},
+			useyn = #{useyn}
+		where seq = #{orgseq}
+	</update>
+	<!-- 삭제 -->
+	<update id="deleteReply" parameterType="hashmap">
+		update tb_design_reply set
+			useyn = 'N'
+		where seq = #{orgseq}
+	</update>
+	<select id="selectReplyOne" parameterType="hashmap" resultType="hashmap">
+		select 
+			seq, useq, title, contents, filename, orgfilename, useyn, regid, regdt,
+			(select name from tb_admin where adminid = regid ) as name
+		from tb_design_reply
+		where seq = #{orgseq}
+	</select>
+	<!--  -->
+	
+	
+	
+	
+	
+	
+	
+	<delete id="delete" parameterType="hashmap">
+		/* Intranet Delete*/
+		Delete from tb_design
+		Where seq = #{seq}
+	</delete>
+	
+	<update id="updateUseYn" parameterType="hashmap">
+        <![CDATA[
+        	UPDATE tb_design
+        	SET useyn = #{useyn}
+        	WHERE seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+	
+	<delete id="deleteDesignOrder" parameterType="int">
+		DELETE FROM tb_design_order
+		WHERE seq = #{ seq }
+	</delete>
+	<delete id="deleteDesignOrderReply" parameterType="int">
+		DELETE FROM tb_design_reply
+		WHERE useq = #{ useq }
+	</delete>
+</mapper>

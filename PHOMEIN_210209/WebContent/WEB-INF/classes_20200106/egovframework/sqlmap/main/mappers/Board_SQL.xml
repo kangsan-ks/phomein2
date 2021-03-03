@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.community.service.impl.BoardMapper">
+
+	<sql id="getSearch">
+		<if test="searchKeyword != null and searchKeyword != ''">
+	        <choose>
+	            <when test="searchCondition == 0">
+	            	AND ( title like CONCAT('%' , #{searchKeyword} , '%') OR pc_contents like CONCAT('%' , #{searchKeyword} , '%') OR m_contents like CONCAT('%' , #{searchKeyword} , '%')) 
+	            </when>
+	            <when test="searchCondition == 1">
+	            	AND title like CONCAT('%' , #{searchKeyword} , '%')
+	            </when>
+	            <when test="searchCondition == 2">
+	            	AND ( pc_contents like CONCAT('%' , #{searchKeyword} , '%') OR m_contents like CONCAT('%' , #{searchKeyword} , '%'))
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="useyn != null and useyn != ''">
+			AND useyn = #{useyn}
+		</if>
+		<if test="cate != null and cate != ''">
+			AND cate = #{cate}
+		</if>
+		<if test="event_progress != null and event_progress != ''">
+			AND event_progress = #{event_progress}
+		</if>
+	</sql>	
+
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.community.service.impl.BoardMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_board A 
+		<where>
+			1 = 1
+			AND board_type = #{boardType}
+			<if test="front != null and front != ''">
+				AND cate NOT IN ('107202' , '109201' , '109202') 
+			</if>
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.community.service.impl.BoardMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT  seq
+				  , board_type
+				  , cate
+				  , title
+				  , stitle
+				  , pc_contents
+				  , left(pc_contents, 30) as pc_letdown
+				  , m_contents
+				  , left(m_contents, 30) as m_letdown
+				  , pc_thimg
+				  , m_thimg
+				  , pc_alt
+				  , m_alt
+				  , url
+				  , regid
+				  , regdt
+				  , date_format(regdt , '%Y.%m.%d') as regdtTmp
+				  , topview
+				  , useyn
+				  , hitcnt
+				  , store
+				  , event_progress
+				  , startdt
+				  , enddt
+				  , date_format(str_to_date(replace(startdt , '-' , '') , '%Y%m%d'), '%Y.%m.%d') as startdtTmp
+				  , date_format(str_to_date(replace(enddt , '-' , '') , '%Y%m%d'), '%Y.%m.%d') as enddtTmp
+				  , working
+				  , modid
+				  , moddt
+				  , filename1
+				  , filename2
+				  , filename3
+				  , filename4
+				  , filename5
+				  , CASE WHEN date_format(regdt ,'%Y%m%d') > date_format(DATE_ADD(now(), INTERVAL -7 DAY) , '%Y%m%d') THEN 'Y'
+                 		 ELSE 'N' END newYn
+                  , pc_thorinm, m_thorinm, file1_orinm, file2_orinm, file3_orinm, file4_orinm, file5_orinm
+                  , source
+			FROM tb_board
+        ]]>
+		<where>
+			1 = 1
+			AND board_type = #{boardType}
+			<if test="front != null and front != ''">
+				AND cate NOT IN ('107202' , '109201' , '109202') 
+			</if>
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectNoticePaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.community.service.impl.BoardMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT  seq
+				  , board_type
+				  , cate
+				  , title
+				  , stitle
+				  , pc_contents
+				  , left(pc_contents, 30) as pc_letdown
+				  , m_contents
+				  , left(m_contents, 30) as m_letdown
+				  , pc_thimg
+				  , m_thimg
+				  , pc_alt
+				  , m_alt
+				  , url
+				  , regid
+				  , regdt
+				  , date_format(regdt , '%Y.%m.%d') as regdtTmp
+				  , topview
+				  , useyn
+				  , hitcnt
+				  , store
+				  , event_progress
+				  , startdt
+				  , enddt
+				  , date_format(str_to_date(replace(startdt , '-' , '') , '%Y%m%d'), '%Y.%m.%d') as startdtTmp
+				  , date_format(str_to_date(replace(enddt , '-' , '') , '%Y%m%d'), '%Y.%m.%d') as enddtTmp
+				  , working
+				  , modid
+				  , moddt
+				  , filename1
+				  , filename2
+				  , filename3
+				  , filename4
+				  , filename5
+				  , CASE WHEN date_format(regdt ,'%Y%m%d') > date_format(DATE_ADD(now(), INTERVAL -7 DAY) , '%Y%m%d') THEN 'Y'
+                 		 ELSE 'N' END newYn
+                  , '2' noticeOrder
+                  , pc_thorinm, m_thorinm, file1_orinm, file2_orinm, file3_orinm, file4_orinm, file5_orinm
+                  , source
+			FROM tb_board
+        ]]>
+		<where>
+			1 = 1
+			AND board_type = #{boardType}
+			<if test="front != null and front != ''">
+				AND cate NOT IN ('107202' , '109201' , '109202') 
+			</if>
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY topview DESC, seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	
+	
+	<select id="selectCommunityOne" parameterType="hashmap" resultType="hashmap">
+        <![CDATA[
+			SELECT  seq
+				  , board_type
+				  , cate
+				  , title
+				  , stitle
+				  , pc_contents
+				  , m_contents
+				  , pc_thimg
+				  , m_thimg
+				  , pc_alt
+				  , m_alt
+				  , url
+				  , regid
+				  , regdt
+				  , date_format(regdt , '%Y.%m.%d') as regdtTmp
+				  , topview
+				  , useyn
+				  , hitcnt
+				  , store
+				  , event_progress
+				  , startdt
+				  , enddt
+				  , date_format(str_to_date(replace(startdt , '-' , '') , '%Y%m%d'), '%Y.%m.%d') as startdtTmp
+				  , date_format(str_to_date(replace(enddt , '-' , '') , '%Y%m%d'), '%Y.%m.%d') as enddtTmp
+				  , working
+				  , modid
+				  , moddt
+				  , filename1
+				  , filename2
+				  , filename3
+				  , filename4
+				  , filename5
+				  , pc_thorinm, m_thorinm, file1_orinm, file2_orinm, file3_orinm, file4_orinm, file5_orinm
+				  , source
+			FROM tb_board
+        ]]>
+		<where>
+			1 = 1
+			AND board_type = #{boardType}
+			AND seq = #{seq}
+		</where>
+	</select>
+	
+	<select id="selectPreOne" parameterType="hashmap" resultType="hashmap">
+		SELECT
+		 	   a.seq as seq
+		     , a.title as title
+		 FROM 
+		tb_board a
+		 WHERE
+		 
+		  seq = (
+		  <![CDATA[ 
+		    (SELECT seq  FROM tb_board WHERE seq < #{seq} and board_type = #{boardType} 
+		 ]]>
+		    <if test="front != null and front != ''">
+				AND cate NOT IN ('107202' , '109201' , '109202') 
+			</if>
+		     ORDER BY seq DESC LIMIT 1)
+		   )
+		 ORDER BY seq
+	</select>
+	
+	<select id="selectNextOne" parameterType="hashmap" resultType="hashmap">
+		
+		SELECT
+		 	   a.seq as seq
+		     , a.title as title
+		 FROM 
+		tb_board a
+		 WHERE
+		  seq = ( 
+		  <![CDATA[
+		    (SELECT seq  FROM tb_board WHERE seq > #{seq} and board_type = #{boardType}
+		 ]]>
+		    <if test="front != null and front != ''">
+				AND cate NOT IN ('107202' , '109201' , '109202') 
+			</if> 
+		    ORDER BY seq LIMIT 1)
+		   )
+		 ORDER BY seq
+	</select>
+	
+	<delete id="delete" parameterType="hashmap">
+		/* Board Delete*/
+		DELETE from tb_board
+		 WHERE board_type = #{boardType}
+		   AND seq = #{seq}
+	</delete>
+	
+	<insert id="insertComuunityBoard" parameterType="hashmap">
+		/* community Insert */
+		INSERT INTO tb_board
+				(board_type, 
+				 cate, 
+				 title, 
+				 <if test="pcContents != null and pcContents != ''">
+				 pc_contents, 
+				 </if>
+				 <if test="mContents != null and mContents != ''">
+				 m_contents,
+				 </if>
+				 <if test="pcThimg != null and pcThimg != ''">
+				 pc_thimg, 
+				 pc_thorinm,
+				 </if>
+				 <if test="mThimg != null and mThimg != ''">
+				 m_thimg,
+				 m_thorinm,
+				 </if>
+				 <if test="pcAlt != null and pcAlt != ''">
+				 pc_alt, 
+				 </if>
+				 <if test="mAlt != null and mAlt != ''">
+				 m_alt, 
+				 </if>
+				 url, 
+				 regid, 
+				 regdt, 
+				 <if test="topview != null and topview != ''">
+				 topview, 
+				 </if>
+				 useyn, 
+				 hitcnt, 
+				 <if test="store != null and store != ''">
+				 store, 
+				 </if>
+				 <if test="event_progress != null and event_progress != ''">
+				 event_progress, 
+				 </if>
+				 <if test="startdt != null and startdt != ''">
+				 startdt, 
+				 enddt, 
+				 </if>
+				 <if test="filename1 != null and filename1 != ''">
+				 filename1, 
+				 file1_orinm,
+				 </if>
+				 <if test="filename2 != null and filename2 != ''">
+				 filename2,
+				 file2_orinm, 
+				 </if>
+				 <if test="filename3 != null and filename3 != ''">
+				 filename3,
+				 file3_orinm,
+				 </if>
+				 <if test="filename4 != null and filename4 != ''">
+				 filename4,
+				 file4_orinm,
+				 </if>
+				 <if test="filename5 != null and filename5 != ''">
+				 filename5,
+				 file5_orinm,
+				 </if>
+				<if test="source != null and source != ''">
+			    source,
+			    </if>
+			    <if test="stitle != null and stitle != ''">
+			    stitle,
+			    </if>
+				 modid, 
+				 moddt
+				 ) 
+		VALUES (#{boardType},
+			    #{cate},
+			    #{title}, 
+			    <if test="pcContents != null and pcContents != ''">
+			    #{pcContents}, 
+			    </if>
+			    <if test="mContents != null and mContents != ''">
+			    #{mContents}, 
+			    </if>
+			    <if test="pcThimg != null and pcThimg != ''">
+			    #{pcThimg},
+			    #{pc_thorinm},
+			    </if>
+			    <if test="mThimg != null and mThimg != ''">
+			    #{mThimg},
+			    #{m_thorinm},
+			    </if> 
+			    <if test="pcAlt != null and pcAlt != ''">
+			    #{pcAlt},
+			    </if> 
+			    <if test="mAlt != null and mAlt != ''">
+			    #{mAlt},
+			    </if> 
+			    #{url}, 
+			    #{regid}, 
+			    NOW(), 
+			    <if test="topview != null and topview != ''">
+			    #{topview}, 
+			    </if>
+			    #{useyn}, 
+			    0, 
+			    <if test="store != null and store != ''">
+			    #{store}, 
+			    </if>
+			    <if test="event_progress != null and event_progress != ''">
+			    #{event_progress}, 
+			    </if>
+			    <if test="startdt != null and startdt != ''">
+			    #{startdt} ,
+			    #{enddt} ,
+			    </if>
+			    <if test="filename1 != null and filename1 != ''">
+			    #{filename1},
+			    #{file1_orinm}, 
+			    </if>
+			    <if test="filename2 != null and filename2 != ''">
+			    #{filename2},
+			    #{file2_orinm},
+			    </if>
+			    <if test="filename3 != null and filename3 != ''">
+			    #{filename3}, 
+			    #{file3_orinm},
+			    </if>
+			    <if test="filename4 != null and filename4 != ''">
+			    #{filename4},
+			    #{file4_orinm}, 
+			    </if>
+			    <if test="filename5 != null and filename5 != ''">
+			    #{filename5},
+			    #{file5_orinm},
+			    </if>
+			    <if test="source != null and source != ''">
+			    #{source},
+			    </if>
+			    <if test="stitle != null and stitle != ''">
+			    #{stitle},
+			    </if>
+			    #{modid}, 
+			    NOW()
+			    );			    
+	</insert>
+	
+	<update id="updateComuunityBoard" parameterType="hashmap">
+		/* community Update */
+		UPDATE tb_board 
+		   SET cate = #{cate}, 
+		       title = #{title}, 
+		       <if test="pcContents != null and pcContents != ''">
+		       pc_contents = #{pcContents}, 
+		       </if>
+		       <if test="mContents != null and mContents != ''">
+		       m_contents = #{mContents}, 
+		       </if>
+		       
+		       <if test="pcThimg != null and pcThimg != ''">
+		       pc_thimg = #{pcThimg},
+		       pc_thorinm = #{pc_thorinm},
+		       </if>
+		       <if test="pc_img_del != null and pc_img_del != ''">
+				pc_thimg = '',
+				pc_thorinm = '',
+				</if>
+		       <if test="mThimg != null and mThimg != ''">
+		       m_thimg = #{mThimg},
+		       m_thorinm = #{m_thorinm},
+		       </if>
+		       <if test="m_img_del != null and m_img_del != ''">
+				m_thimg = '',
+				m_thorinm = '',
+				</if>
+				
+		       <if test="pcAlt != null and pcAlt != ''">
+		       pc_alt = #{pcAlt}, 
+		       </if>
+		       <if test="mAlt != null and mAlt != ''">
+		       m_alt = #{mAlt}, 
+		       </if>
+		       <if test="url != null and url != ''">
+		       url = #{url}, 
+		       </if>
+		       <if test="topview != null and topview != ''">
+		       topview = #{topview}, 
+		       </if>
+		       useyn = #{useyn}, 
+		       <if test="store != null and store != ''">
+			   store = #{store}, 
+			   </if>
+			   <if test="event_progress != null and event_progress != ''">
+			   event_progress = #{event_progress}, 
+			   </if>
+			   <if test="startdt != null and startdt != ''">
+			   startdt = #{startdt}, 
+			   enddt = #{enddt},
+			   </if>  
+			   
+			   <if test="filename1 != null and filename1 != ''">
+			   filename1 = #{filename1},
+			   file1_orinm = #{file1_orinm},
+			   </if>
+			   <if test="file01_del != null and file01_del != ''">
+				filename1 = '',
+				file1_orinm = '',
+				</if>
+			   <if test="filename2 != null and filename2 != ''">
+			   filename2 = #{filename2},
+			   file2_orinm = #{file2_orinm},
+			   </if>
+			   <if test="file02_del != null and file02_del != ''">
+				filename2 = '',
+				file2_orinm = '',
+				</if>
+			   <if test="filename3 != null and filename3 != ''"> 
+			   filename3 = #{filename3},
+			   file3_orinm = #{file3_orinm},
+			   </if>
+			   <if test="file03_del != null and file03_del != ''">
+				filename3 = '',
+				file3_orinm = '',
+				</if>
+			   <if test="filename4 != null and filename4 != ''"> 
+			   filename4 = #{filename4},
+			   file4_orinm = #{file4_orinm},
+			   </if>
+			   <if test="file04_del != null and file04_del != ''">
+				filename4 = '',
+				file4_orinm = '',
+				</if>
+			   <if test="filename5 != null and filename5 != ''">
+			   filename5 = #{filename5} ,
+			   file5_orinm = #{file5_orinm},
+			   </if>
+			   <if test="file05_del != null and file05_del != ''">
+				filename5 = '',
+				file5_orinm = '',
+				</if>
+				<if test="source != null and source != ''">
+				source = #{source},
+				</if>
+				<if test="stitle != null and stitle != ''">
+			    stitle = #{stitle},
+			    </if>
+			   modid = #{modid}, 
+			   moddt = NOW()
+		 WHERE board_type = #{boardType}
+		   AND seq = #{seq}
+	</update>
+	
+		<update id="updateUseYn" parameterType="hashmap">
+        <![CDATA[
+        	UPDATE tb_board
+        	SET useyn = #{useyn}
+        	WHERE seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+	
+	
+</mapper>

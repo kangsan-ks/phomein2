@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.menu.service.impl.ProductMapper">
+	
+	<sql id="getSearch">
+		<if test="search_name != null and search_name != ''">
+			AND name LIKE CONCAT('%' , #{search_name} , '%')
+		</if>
+		<!--  키워드 검색  -->
+		<if test="search_site_ck != null and search_site_ck != ''">
+			<choose>
+	            <when test="search_site_ck == 0">
+	            </when>
+	            <when test="search_site_ck == 101201">
+	            	AND kr_ck = 'Y'
+	            </when>
+	            <when test="search_site_ck == 101202">
+	            	AND en_ck = 'Y'
+	            </when>	
+	            <when test="search_site_ck == 101203">
+	            	AND jp_ck = 'Y'
+	            </when>            	            
+			</choose>
+		</if>
+		<if test="search_useyn != null and search_useyn != ''">
+	        <choose>
+	            <when test="search_useyn == 0">
+	            </when>
+	            <when test="search_useyn == 1">
+	            	AND useyn = 'Y'
+	            </when>
+	            <when test="search_useyn == 2">
+	            	AND useyn = 'N'
+	            </when>	            	            
+			</choose>
+		</if>
+	</sql>
+	
+	<sql id="getMenuSearch">
+		AND useyn = 'Y'
+		<choose>
+		<when test='best_ck == "Y" and hot_ck == "Y" and new_ck == "Y"'>
+		AND ((best_ck = #{best_ck}) OR (best_ck = #{best_ck} AND hot_ck = #{hot_ck}) OR  (best_ck = #{best_ck} AND hot_ck = #{hot_ck} AND new_ck = #{new_ck})
+		OR ((hot_ck = #{hot_ck}) OR (hot_ck = #{hot_ck} AND best_ck = #{best_ck}) OR  (hot_ck = #{hot_ck} AND best_ck = #{best_ck} AND new_ck = #{new_ck})) 
+		OR ((new_ck = #{new_ck}) OR (new_ck = #{new_ck} AND hot_ck = #{hot_ck}) OR  (new_ck = #{new_ck} AND hot_ck = #{hot_ck} AND best_ck = #{best_ck}))) 
+		</when>
+		<when test='best_ck == "Y" and hot_ck == "Y"'>
+		AND ((best_ck = #{best_ck}) OR (best_ck = #{best_ck} AND hot_ck = #{hot_ck}) OR  (best_ck = #{best_ck} AND hot_ck = #{hot_ck} AND new_ck = #{new_ck})
+		OR ((hot_ck = #{hot_ck}) OR (hot_ck = #{hot_ck} AND best_ck = #{best_ck}) OR  (hot_ck = #{hot_ck} AND best_ck = #{best_ck} AND new_ck = #{new_ck}))) 
+		</when>
+		<when test='hot_ck == "Y" and new_ck == "Y"'>
+		AND ((hot_ck = #{hot_ck}) OR (hot_ck = #{hot_ck} AND best_ck = #{best_ck}) OR  (hot_ck = #{hot_ck} AND best_ck = #{best_ck} AND new_ck = #{new_ck}) 
+		OR ((new_ck = #{new_ck}) OR (new_ck = #{new_ck} AND hot_ck = #{hot_ck}) OR  (new_ck = #{new_ck} AND hot_ck = #{hot_ck} AND best_ck = #{best_ck})))
+		</when>
+		<when test='best_ck == "Y" and new_ck == "Y"'>
+		AND ((best_ck = #{best_ck}) OR (best_ck = #{best_ck} AND hot_ck = #{hot_ck}) OR  (best_ck = #{best_ck} AND hot_ck = #{hot_ck} AND new_ck = #{new_ck})
+		OR ((new_ck = #{new_ck}) OR (new_ck = #{new_ck} AND hot_ck = #{hot_ck}) OR  (new_ck = #{new_ck} AND hot_ck = #{hot_ck} AND best_ck = #{best_ck})))
+		</when>
+		<when test='best_ck == "Y"'>
+		AND ((best_ck = #{best_ck}) OR (best_ck = #{best_ck} AND hot_ck = #{hot_ck}) OR  (best_ck = #{best_ck} AND hot_ck = #{hot_ck} AND new_ck = #{new_ck})) 
+		</when>
+		<when test='hot_ck == "Y"'>
+		AND ((hot_ck = #{hot_ck}) OR (hot_ck = #{hot_ck} AND best_ck = #{best_ck}) OR  (hot_ck = #{hot_ck} AND best_ck = #{best_ck} AND new_ck = #{new_ck})) 
+		</when>
+		<when test='new_ck == "Y"'>
+		AND ((new_ck = #{new_ck}) OR (new_ck = #{new_ck} AND hot_ck = #{hot_ck}) OR  (new_ck = #{new_ck} AND hot_ck = #{hot_ck} AND best_ck = #{best_ck})) 
+		</when>
+		</choose>
+		<if test="search_site_ck != null and search_site_ck != ''">
+			<choose>
+	            <when test="search_site_ck == 0">
+	            </when>
+	            <when test="search_site_ck == 1">
+	            	<if test="menu_ck != null and menu_ck != ''">
+						AND SUBSTRING(kr_code, 1, 6) IN
+						<foreach item="item" index="index" collection="menu_ck" open="(" close=")" separator=",">
+				            #{item}
+				        </foreach>
+						AND LENGTH(kr_code) = 6
+					</if>
+	            </when>
+	            <when test="search_site_ck == 2">
+	            	<if test="menu_ck != null and menu_ck != ''">
+						AND SUBSTRING(en_code, 1, 6) IN
+						<foreach item="item" index="index" collection="menu_ck" open="(" close=")" separator=",">
+				            #{item}
+				        </foreach>
+						AND LENGTH(en_code) = 6
+					</if>
+	            </when>	
+	            <when test="search_site_ck == 3">
+	            	<if test="menu_ck != null and menu_ck != ''">
+						AND SUBSTRING(jp_code, 1, 6) IN
+						<foreach item="item" index="index" collection="menu_ck" open="(" close=")" separator=",">
+				            #{item}
+				        </foreach>
+						AND LENGTH(jp_code) = 6
+					</if>
+	            </when>            	            
+			</choose>
+		</if>
+		<if test="menu_ck == null or menu_ck == ''">
+			AND 1 != 1
+		</if>
+	</sql>
+	
+	<sql id="getCodeSearch">
+		AND useyn = 'Y'
+		<if test="search_site_ck != null and search_site_ck != ''">
+			<choose>
+	            <when test="search_site_ck == 0">
+	            </when>
+	            <when test="search_site_ck == 1">
+	            	<if test="menu_ck != null and menu_ck != ''">
+						AND SUBSTRING(kr_code, 1, 6) IN
+						<foreach item="item" index="index" collection="menu_ck" open="(" close=")" separator=",">
+				            #{item}
+				        </foreach>
+						AND LENGTH(kr_code) = 6
+					</if>
+	            </when>
+	            <when test="search_site_ck == 2">
+	            	<if test="menu_ck != null and menu_ck != ''">
+						AND SUBSTRING(en_code, 1, 6) IN
+						<foreach item="item" index="index" collection="menu_ck" open="(" close=")" separator=",">
+				            #{item}
+				        </foreach>
+						AND LENGTH(en_code) = 6
+					</if>
+	            </when>	
+	            <when test="search_site_ck == 3">
+	            	<if test="menu_ck != null and menu_ck != ''">
+						AND SUBSTRING(jp_code, 1, 6) IN
+						<foreach item="item" index="index" collection="menu_ck" open="(" close=")" separator=",">
+				            #{item}
+				        </foreach>
+						AND LENGTH(jp_code) = 6
+					</if>
+	            </when>            	            
+			</choose>
+		</if>
+	</sql>
+	
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.menu.service.impl.ProductMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_product A 
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.menu.service.impl.ProductMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+					name, 
+					pcode,
+				    kr_ck, 
+				    en_ck, 
+				    jp_ck,
+				    (SELECT name FROM tb_code_mgt WHERE code = tb_product.kr_code AND useyn = 'Y') AS kr_code,
+				    (SELECT name FROM tb_code_mgt WHERE code = tb_product.en_code AND useyn = 'Y') AS en_code, 
+				    (SELECT name FROM tb_code_mgt WHERE code = tb_product.jp_code AND useyn = 'Y') AS jp_code,
+				    kr_name, 
+				    en_name, 
+				    jp_name,
+				    s_price, 
+				    l_price, 
+				    c_price,
+				    kr_menu, 
+				    en_menu, 
+				    jp_menu,
+				    best_ck,
+				    new_ck,
+				    hot_ck,
+				    f_file1,
+				    regid, 
+				    regdt,
+				    useyn,
+				    modid, 
+				    moddt,
+				    c_yn
+			FROM tb_product
+        ]]>
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectMenuList" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.menu.service.impl.ProductMapper.selectMenuList */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT a.seq,
+					a.name, 
+					a.pcode,
+				    a.kr_ck, 
+				    a.en_ck, 
+				    a.jp_ck,
+				    (SELECT name FROM tb_code_mgt WHERE code = a.kr_code AND useyn = 'Y') AS kr_code_name,
+				    (SELECT name FROM tb_code_mgt WHERE code = a.en_code AND useyn = 'Y') AS en_code_name, 
+				    (SELECT name FROM tb_code_mgt WHERE code = a.jp_code AND useyn = 'Y') AS jp_code_name,
+				    a.kr_code,
+				    a.en_code,
+				    a.jp_code,
+				    a.kr_name, 
+				    a.en_name, 
+				    a.jp_name,
+				    a.s_price, 
+				    a.l_price, 
+				    a.c_price,
+				    a.kr_menu, 
+				    a.en_menu, 
+				    a.jp_menu,
+				    a.best_ck,
+				    a.new_ck,
+				    a.hot_ck,
+				    a.f_file1,
+				    a.regid, 
+				    a.regdt,
+				    a.useyn,
+				    a.modid, 
+				    a.moddt,
+				    a.c_yn
+			FROM tb_product a
+        ]]>
+		<where>
+			<if test='all_ck == "Y"'>
+				1 = 1
+			</if>
+			<if test='all_ck == ""'>
+				1 != 1
+			</if>
+			<if test='all_ck == "N"'>
+				<include refid="getMenuSearch" />
+			</if>
+			<if test="search_site_ck != null and search_site_ck != ''">
+				<choose>
+		            <when test="search_site_ck == 0">
+		            </when>
+		            <when test="search_site_ck == 1">
+		            	AND kr_ck = 'Y'
+		            </when>
+		            <when test="search_site_ck == 2">
+		            	AND en_ck = 'Y'
+		            </when>	
+		            <when test="search_site_ck == 3">
+		            	AND jp_ck = 'Y'
+		            </when>            	            
+				</choose>
+			</if>
+			AND useyn = 'Y'
+		</where>
+		ORDER BY a.pcode ASC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectCodeList" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.menu.service.impl.ProductMapper.selectCodeList */
+        <![CDATA[
+			SELECT seq,
+					kr_name,
+					en_name,
+					jp_name,
+					kr_menu,
+					en_menu,
+					jp_menu,
+					s_price,
+					l_price,
+					c_price,
+					c_yn,
+					f_file1
+			FROM tb_product
+        ]]>
+		<where>
+			<include refid="getCodeSearch" />
+			<if test="seq != null and seq != ''">
+				AND seq != #{seq}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectProductView" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.menu.service.impl.ProductMapper.selectProductView */
+        <![CDATA[
+	        SELECT seq,
+					name, 
+					pcode,
+				    kr_ck, 
+				    en_ck, 
+				    jp_ck,
+				    kr_code,
+				    en_code, 
+				    jp_code,
+				    (SELECT name FROM tb_code_mgt WHERE code = tb_product.kr_code AND useyn = 'Y') AS kr_code_name,
+				    (SELECT name FROM tb_code_mgt WHERE code = tb_product.en_code AND useyn = 'Y') AS en_code_name, 
+				    (SELECT name FROM tb_code_mgt WHERE code = tb_product.jp_code AND useyn = 'Y') AS jp_code_name,
+				    kr_name, 
+				    en_name, 
+				    jp_name,
+				    s_price, 
+				    l_price, 
+				    c_price,
+				    kr_menu, 
+				    en_menu, 
+				    jp_menu,
+				    best_ck,
+				    new_ck,
+				    hot_ck,
+				    f_file1,
+				    regid, 
+				    regdt,
+				    useyn,
+				    modid, 
+				    moddt,
+				    c_yn
+				FROM tb_product
+		]]>
+		<if test="seq != null and seq != ''">
+			WHERE seq = #{seq}
+		</if>
+	</select>
+	
+	<update id="mergeProduct" parameterType="com.main.admin.menu.web.vo.ProductVo">
+		/* ProgramID=com.main.admin.menu.service.impl.ProductMapper.mergeProduct */
+        <![CDATA[
+        	INSERT INTO 
+        		tb_product (
+        			seq,
+            		pcode,
+            		name,
+                	kr_ck,
+                	en_ck,
+                	jp_ck,
+                	kr_code,
+                	en_code,
+                	jp_code,
+                	kr_name,
+                	en_name,
+                	jp_name,
+                	c_yn,
+                	s_price,
+                	l_price,
+               	 	c_price,
+               	 	kr_menu,
+               	 	en_menu,
+               	 	jp_menu,
+                	best_ck,
+                	new_ck,
+                	hot_ck,
+                	f_file1,
+                	regid,
+                	regdt,
+                	modid,
+                	moddt,
+                	useyn
+                )
+                VALUES (
+                	#{seq},
+                	#{pcode},
+                	#{name},
+                	#{kr_ck},
+                	#{en_ck},
+                	#{jp_ck},
+                	#{kr_code},
+                	#{en_code},
+                	#{jp_code},
+                	#{kr_name},
+                	#{en_name},
+                	#{jp_name},
+                	#{c_yn},
+                	#{s_price},
+                	#{l_price},
+                	#{c_price},
+                	#{kr_menu},
+                	#{en_menu},
+                	#{jp_menu},
+                	#{best_ck},
+                	#{new_ck},
+                	#{hot_ck},
+                	#{f_file1_txt},
+                	#{regid},
+                	now(),
+                	#{regid},
+                	now(),
+                	#{useyn}
+                )
+                ON DUPLICATE KEY UPDATE
+            		name=#{name},
+                	kr_ck=#{kr_ck},
+                	en_ck=#{en_ck},
+                	jp_ck=#{jp_ck},
+                	kr_code=#{kr_code},
+                	en_code=#{en_code},
+                	jp_code=#{jp_code},
+                	kr_name=#{kr_name},
+                	en_name=#{en_name},
+                	jp_name=#{jp_name},
+                	c_yn=#{c_yn},
+                	s_price=#{s_price},
+                	l_price=#{l_price},
+               	 	c_price=#{c_price},
+               	 	kr_menu=#{kr_menu},
+               	 	en_menu=#{en_menu},
+               	 	jp_menu=#{jp_menu},
+                	best_ck=#{best_ck},
+                	new_ck=#{new_ck},
+                	hot_ck=#{hot_ck},
+                	f_file1=#{f_file1_txt},
+                	modid=#{modid},
+                	moddt=now(),
+                	useyn=#{useyn}
+        ]]>
+    </update>
+    
+    <delete id="deleteProduct" parameterType="hashmap">
+    	/* ProgramID=com.main.admin.menu.service.impl.ProductMapper.deleteProduct */
+        <![CDATA[
+        	DELETE 
+		  	FROM tb_product
+		  	WHERE seq = #{seq}
+		]]>
+	</delete>
+    
+    <select id="nextSeq" parameterType="hashmap" resultType="string">
+		/* ProgramID=com.main.admin.menu.service.impl.ProductMapper.nextSeq */
+        <![CDATA[
+	        SELECT * 
+	        FROM (
+		        SELECT MAX(seq)+1 
+		        FROM tb_product
+	        ) tb
+		]]>
+	</select>
+	
+	<update id="updateUseYn" parameterType="hashmap">
+		/* ProgramID=com.main.admin.menu.service.impl.ProductMapper.updateUseYn */
+        <![CDATA[
+        	UPDATE tb_product
+        	SET useyn = #{useyn}
+        	WHERE seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+    
+    <select id="duplicateProductCnt" parameterType="hashmap" resultType="int">
+		/* ProgramID=com.main.admin.menu.service.impl.ProductMapper.duplicateProductCnt */
+		<![CDATA[
+			SELECT
+				COUNT(A.seq) AS totCnt
+			FROM tb_product A 
+			WHERE pcode = #{pcode}
+		]]>
+	</select>
+
+</mapper>

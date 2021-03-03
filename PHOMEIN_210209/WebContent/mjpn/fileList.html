@@ -1,0 +1,557 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>포메인 일문 리뉴얼 File List</title>
+<link rel="shortcut icon" type="image/x-icon" href="images/common/favicon.ico">
+<link rel="icon" href="images/common/favicon.png">
+<style type="text/css">
+html, body {margin:0; padding:0;}
+html {overflow-y:scroll;}
+body {color:#666; background-color:#fff; font:12px/1.5 'Malgun Gothic', Dotum, '돋움', Verdana, sans-serif;}
+a {color:#27e; text-decoration:none;}
+a:focus,
+a:hover,
+a:active {text-decoration:underline;}
+em {font-style:normal;}
+.header {padding:.5em;}
+.header h1 {margin-right:1em; color:#000; font-size:2em; text-align:center;}
+.header ul {display:inline; font-size:1.5em; list-style:none;}
+.header ul li {display:inline;}
+.group-title {margin-top:1em; color:#000; font-weight:bold; font-size:1.5em;}
+table {width:100%; border-collapse:collapse; border-spacing:0;}
+table caption {display:none;}
+table th {color:#333; background-color:#eee;}
+table th,
+table td {padding:0 .5em; border:1px solid #ddd; text-align:left;}
+table th,
+table td.stat,
+table td.date {text-align:center;}
+table tr.even,
+table tr td.multi {background-color:#fafafa;}
+table tr.add td {background-color:#fd0;}
+table tr.modify td {background-color:#fffeb4;}
+table tr.hover td {background-color:#eee;}
+table tr.none td {color:#000; background-color:#fc8989;}
+table tr.up td {background-color:#ffe9f5;}
+.update {color:#ff0000 !important;}
+table tr td em {display:inline-block; margin:0 3px; font-size:12px; color:red; font-style:normal;}
+table tr td strong {display:inline-block; margin:0 3px; font-size:12px; color:green; font-style:normal;}
+.section {margin:0 0 15px;}
+.section .title {margin:0; padding:0; color:#000; font-weight:bold; font-size:100%;}
+body.js .section .title {padding:.5em; border:1px solid #ccc; background-color:#ddd; cursor:pointer;}
+body.js .section + .section .title {border-top:0;}
+body.js .section .title .page-count {color:#666; font-weight:normal;}
+body.js .section .content {display:none;}
+.attention {margin-bottom:20px; padding:20px; color:#000; font-weight:bold; background:rgba(135,135,135,0.3);}
+#sb-body {border:none !important;}
+.state-ico {padding:0 10px 0 0; line-height:14px; text-align:right;}
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript">
+(function ($) {
+	$.fn.stat = function (options) {
+		var settings = $.extend({
+				title: 'h2.title',
+				content: 'div.content',
+				files: 'tbody tr',
+				date: 'td.date',
+				index: 0,
+				openAll: false,
+				speed: 'fast'
+			}, options),
+			all_sections = this,
+			header = $('div.header');
+		return this.each(function () {
+			var self = this,
+				$self = $(self),
+				title_text = [],
+				completed = 0;
+			self.section_title = $(settings.title, $self);
+			self.content = $(settings.content, $self);
+			self.files = $(settings.files, $self);
+			self.files.each(function () {
+				var date = $(settings.date, this);
+				date.each(function () {
+					var text = $(this).text();
+					if (text) {
+						completed++;
+					}
+				});
+			});
+			self.files
+				.bind('mouseenter', function () {
+					$(this).addClass('hover');
+				})
+				.bind('mouseleave', function () {
+					$(this).removeClass('hover');
+				});
+			title_text = [self.section_title.text(), ' <span class="page-count">(', completed, '/', self.files.length, ')</span>'];
+			self.section_title.html(title_text.join(''));
+			self.section_title.bind('click', function () {
+				self.content.slideToggle(settings.speed);
+			});
+			if (settings.openAll || ((settings.index - 1) === all_sections.index(this))) {
+				self.content.css('display', 'block');
+			}
+		});
+	};
+	$(document).ready(function () {
+		$('div.section').stat({ openAll: true });
+		$('#total').text($('tbody tr').length);
+		$('tbody tr:even').addClass('even');
+		$('tbody td[rowspan][rowspan!=1]').addClass('multi');
+
+		//link set
+		var link = $('.content .link');
+		link.each(function(idx){
+			var _this = $(this);
+			var _path = _this.parents('.content').find('.path').eq(0).text();
+			var tag = '<a href="' + _path + _this.text() + '" target="_blank">' + _this.text() + '</a>';
+			_this.html(tag);
+		});
+
+	});
+}(jQuery));
+
+function openPop(_url , _name , _width , _height){
+	window.open(_url, _name , 'width='+_width+'px, height='+_height+'px, top=0, left=0, resizable=yes, scrollbars=yes, location=no,  toolbar=no, status=no, menubar=no');
+	return false;
+}
+</script>
+</head>
+<body class="js">
+	<div class="header">
+		<h1>포메인 일문 리뉴얼 Mobile File List</h1>
+	</div>
+	<div class="attention">
+	<ul class="refer">
+		<li>문서형식 선언 : HTML5</li>
+		<li>meta 정보 :  charset="utf-8"</li>
+		<li>x브라우징 : 크롬, ie10.0 (standard 브라우져), ie9.0, ie11.0, FireFox(최신 vs), 사파리, 오페라</li>
+	</ul>
+	<ul class="important">
+		<li><span>개발주의 사항 :</span></li>
+		<li>1. 상단 DOCTYPE선언 삭제하거나 개발관련 코드 넣지 마세요!!. css 제대로 렌더링 안됩니다.</li>
+		<li>2. 그밖의 주의 사항은 별도 첨부합니다.</li>
+		<li>3. 헤더 , 푸터 영역은 guide/layout 파일에만 작업 되었습니다. (서브컨텐츠는 영역만적용)</li>
+		<li>4. 공통 스크립트 및 독립적 스크립트 로드 순위를 맨 하단으로 설정하였습니다.</li>
+		<li>5. 수정날짜는 yyyymmdd 로 표시합니다.</li>
+	</ul>
+	<ul class="important">
+		<li>최종 업데이트 날짜 : <em style="color:red;">2019-03-07</em></li>
+	</ul>
+	</div>
+	<p class="state-ico">
+		○ 작업중 &nbsp;
+		● 완료
+	</p>
+	<!-- 가이드 -->
+	<div class="section">
+		<h2 class="title">가이드</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>공통레이아웃</td>
+						<td>기본형</td>
+						<td></td>
+						<td class="path">./@guide/</td>
+						<td class="link">layout_01.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>공통레이아웃</td>
+						<td>상단 비주얼 no</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">layout_02.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>팝업</td>
+						<td></td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">pop_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //가이드 -->
+
+	<!-- 00.main -->
+	<div class="section">
+		<h2 class="title">MAIN</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="path">./main/</td>
+						<td class="link">index.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //00. main -->
+
+	<!-- 01. phomein -->
+	<div class="section">
+		<h2 class="title">PHOMEIN</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>DAILYKING</td>
+						<td></td>
+						<td></td>
+						<td class="path">./phomein/</td>
+						<td class="link">dailyking.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>About phomein</td>
+						<td></td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">about.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>CSR</td>
+						<td></td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">phoever.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //01. phomein -->
+
+	<!-- 02. menu -->
+	<div class="section">
+		<h2 class="title">MENU</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>메뉴소개</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./menu/</td>
+						<td class="link">menu_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">menu_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //02. menu -->
+
+	<!-- 03. store -->
+	<div class="section">
+		<h2 class="title">STORE</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>매장 찾기</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./store/</td>
+						<td class="link">store_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>상세</td>
+						<td>(팝업)</td>
+						<td class="path"></td>
+						<td class="link">store_view.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //03. store -->
+
+	<!-- 04. commuity -->
+	<div class="section">
+		<h2 class="title">COMMUNITY</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>SNS</td>
+						<td>목록</td>
+						<td></td>
+						<td class="path">./commuity/</td>
+						<td class="link">sns_list.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>CS CENTER</td>
+						<td>약관동의</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">cs_terms.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">cs_info.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //04. commuity -->
+
+	<!-- 05. franchisee -->
+	<div class="section">
+		<h2 class="title">FRANCHISE</h2>
+		<div class="content">
+			<table>
+				<colgroup>
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="12%" />
+					<col width="16%" />
+					<col width="6%" />
+					<col width="10%" />
+					<col width="*" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">2depth</th>
+						<th scope="col">3depth</th>
+						<th scope="col">4depth</th>
+						<th scope="col">path</th>
+						<th scope="col">file</th>
+						<th scope="col">state</th>
+						<th scope="col">date</th>
+						<th scope="col">note</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>인테리어</td>
+						<td></td>
+						<td></td>
+						<td class="path">./franchisee/</td>
+						<td class="link">interior.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>가맹 상담 신청</td>
+						<td>약관동의</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">terms.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>등록</td>
+						<td></td>
+						<td class="path"></td>
+						<td class="link">info.html</td>
+						<td class="stat">●</td>
+						<td class="date">2019-03-07</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //05. franchisee -->
+</body>
+</html>

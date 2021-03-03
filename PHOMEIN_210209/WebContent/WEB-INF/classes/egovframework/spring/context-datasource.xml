@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	
+     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-4.1.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.1.xsd">
+	
+	<!-- 	REAL	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://121.254.168.67:3306/dbdailyking?useSSL=false&amp;characterEncoding=utf8&amp;noAccessToProcedureBodies=true&amp;useInformationSchema=true&amp;autoReconnection=true&amp;failOverReadOnly=false&amp;maxReconnects=10" />
+        <property name="username" value="dailyking"/>
+        <property name="password" value="daily8362!"/>
+        <property name="validationQuery" value="select 1"/>
+    </bean> -->
+	<!-- DEV  	 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://121.254.168.67:3306/dbdailyking?useSSL=false&amp;characterEncoding=utf8&amp;noAccessToProcedureBodies=true&amp;useInformationSchema=true&amp;autoReconnection=true&amp;failOverReadOnly=false&amp;maxReconnects=10" />
+        <property name="username" value="dailyking"/>
+        <property name="password" value="daily8362!"/>
+        <property name="validationQuery" value="select 1"/>
+    </bean>
+   
+    
+    
+    
+	<!-- <qualifier value="DB3" /> -->
+</beans>

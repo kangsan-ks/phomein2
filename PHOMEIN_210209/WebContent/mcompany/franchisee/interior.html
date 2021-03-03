@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<meta name="keywords" content="">
+<title>포메인</title>
+<link rel="stylesheet" type="text/css" href="../common/css/font.css">
+<link rel="stylesheet" type="text/css" href="../common/css/common.css">
+<link rel="stylesheet" type="text/css" href="../common/css/layout.css">
+<link rel="stylesheet" type="text/css" href="../common/css/content.css">
+<!--[if lt IE 9]>
+	<script src="../common/js/placeholders.min.js"></script>
+	<script src="../common/js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+<!-- wrap -->
+<div id="wrap">
+	<!-- skip nav -->
+	<div id="skip_nav">
+        <a href="#content">본문 바로가기</a>
+    </div>
+    <!-- //skip nav -->
+	<!-- header -->
+	<header id="header">
+		<h1>
+			<a href="#none"><span class="blind">DAILYKING INC.</span></a>
+		</h1>
+		<div class="link">
+			<a href="#none" class="btn_link">BRAND</a>
+		</div>
+		<div class="allmenu">
+			<button type="button" class="btn_allmenu"><span class="blind">전체메뉴</span></button>
+		</div>
+	</header>
+	<!-- //header -->
+	<!-- gnb -->
+	<div id="gnb">
+	</div>
+	<!-- //gnb -->
+	<!-- container -->
+	<div id="container">
+		<!-- sub visual -->
+		<div class="sub_visual sv3">
+			<h3>인테리어</h3>
+		</div>
+		<!-- 상단비쥬얼 영역
+			회사소개	: class="sub_visual sv1"
+			연구개발	: class="sub_visual sv2"
+			가맹개설정보 : class="sub_visual sv3"
+			사회공헌 	: class="sub_visual sv4"
+			POLICY	   : class="sub_visual sv5"
+		-->
+		<!-- //sub visual -->
+		<!-- lnb -->
+		<div class="lnb">
+			<div class="dep dep1">
+				<a href="#none">가맹개설정보</a>
+				<ul class="dep_list">
+					<li><a href="#none">회사소개</a></li>
+					<li><a href="#none">연구개발</a></li>
+					<li><a href="#none">가맹개설정보</a></li>
+					<li><a href="#none">사회공헌</a></li>
+				</ul>
+			</div>
+			<div class="dep dep2">
+				<a href="#none">인테리어</a>
+				<ul class="dep_list">
+					<li><a href="#none">가맹 안내</a></li>
+					<li><a href="#none">가맹 비용</a></li>
+					<li><a href="#none">인테리어</a></li>
+					<li><a href="#none">우수매장 인터뷰</a></li>
+					<li><a href="#none">가맹 상담 신청</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- //lnb -->
+		<!-- content -->
+		<div id="content" class="franchisee">
+			<div class="interior">
+				<div class="tit_area">
+					<h4>Modern &amp; Minimal</h4>
+					<p class="desc">
+					포메인은 불필요한 요소를 최소화하여 간결하고<br>
+					깔끔한 느낌의 공간을 추구하며, 밝고 따뜻한 컬러의 사용으로 식사 시 편안한 분위기를 조성합니다.
+					</p>
+				</div>
+				<!-- 20190319 수정 s -->
+				<div class="store_list">
+					<div class="swiper">
+						<ul class="swiper_wrap">
+							<li class="swiper_slide"><img src="../common/images/@temp/img_640x408.jpg" alt=""><div class="store">정자본점</div></li>
+							<li class="swiper_slide"><img src="../common/images/@temp/img_640x408.jpg" alt=""><div class="store">신촌점</div></li>
+							<li class="swiper_slide"><img src="../common/images/@temp/img_640x408.jpg" alt=""><div class="store">용인 보라점</div></li>
+						</ul>
+						<div class="swiper_btn_next"></div>
+						<div class="swiper_btn_prev"></div>
+						<div class="swiper_pagination"></div>
+					</div>
+				</div>
+				<!-- //20190319 수정 e -->
+				<!-- 버튼 영역 -->
+				<div class="btn_area">
+					<button type="button" class="btn_tyf c_white btn_more">더보기</button>
+				</div>
+				<!-- //버튼 영역 -->
+			</div>
+		</div>
+		<!-- //content -->
+	</div>
+	<!-- //container -->
+	<!-- footer -->
+	<footer id="footer">
+		<div class="family_site">
+			<a href="#none">Family Site :<span class="txt_brown"><span class="blind">BROWN SUGAR</span></span></a>
+		</div>
+		<ul class="foot_menu">
+			<li><a href="#none">브랜드 제휴 문의</a></li>
+			<li><a href="#none">가맹문의</a></li>
+			<li><a href="#none"><span class="sys">포메인 지원 시스템</span></a></li>
+		</ul>
+		<p class="copyright">
+			가맹문의  대표번호: 1899-2422(연결 1번)<br>
+			직통번호: 031-780-1500 | 이메일: help@phomein.com<br>
+			COPYRIGHT© DAILYKING INC. ALL RIGHT RESERVED.
+		</p>
+ 	</footer>
+	<!-- //footer -->
+</div>
+<!-- //wrap -->
+<script src="../common/js/jquery-1.12.4.min.js"></script>
+<script src="../common/js/swiper.min.js"></script>
+<script src="../common/js/common.js"></script>
+<script>
+// Swiper
+function InteriorSwiper() {
+	var InteriorSwiper = new Swiper('.swiper', {
+		wrapperClass: 'swiper_wrap',
+		slideClass: 'swiper_slide',
+		slidesPerView: 1,
+		loop: true,
+		pagination: {
+			el: '.swiper_pagination',
+			type: 'fraction',
+		},
+		navigation: {
+			nextEl: '.swiper_btn_next',
+			prevEl: '.swiper_btn_prev',
+		},
+	});
+}
+if( $(".swiper .swiper_slide").length > 1 ){
+	InteriorSwiper();
+}
+</script>
+</body>
+</html>

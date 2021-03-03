@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.site.service.impl.PhoeverMapper">
+	
+	<sql id="getSearch">
+		<if test="search_title != null and search_title != ''">
+			AND (title LIKE CONCAT('%' , #{search_title} , '%') OR pc_contents LIKE CONCAT('%' , #{search_title} , '%') OR m_contents LIKE CONCAT('%' , #{search_title} , '%'))
+		</if>
+		<!--  키워드 검색  -->
+		<if test="search_useyn != null and search_useyn != ''">
+	        <choose>
+	            <when test="search_useyn == 0">
+	            </when>
+	            <when test="search_useyn == 1">
+	            	AND useyn = 'Y'
+	            </when>
+	            <when test="search_useyn == 2">
+	            	AND useyn = 'N'
+	            </when>	            	            
+			</choose>
+		</if>
+	</sql>	
+	
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.site.service.impl.PhoeverMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_social A 
+		<where>
+			1 = 1
+			AND tb_socialcol = #{tb_socialcol}
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.site.service.impl.PhoeverMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+					title, 
+					pc_thimg,
+				    pc_alt, 
+				    pc_contents, 
+				    m_thimg,
+				    m_alt, 
+				    m_contents,
+				    regid, 
+				    regdt,
+				    modid, 
+				    moddt,
+				    hitcnt,
+				    useyn,
+				    tb_socialcol
+			FROM tb_social
+        ]]>
+		<where>
+			1 = 1
+			AND tb_socialcol = #{tb_socialcol}
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectPhoeverView" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.site.service.impl.PhoeverMapper.selectPhoeverView */
+        <![CDATA[
+	        SELECT seq,
+					title, 
+					pc_thimg,
+				    pc_alt, 
+				    pc_contents, 
+				    m_thimg,
+				    m_alt, 
+				    m_contents,
+				    regid, 
+				    regdt,
+				    modid, 
+				    moddt,
+				    hitcnt,
+				    useyn,
+				    tb_socialcol
+				FROM tb_social
+		]]>
+			WHERE tb_socialcol = #{tb_socialcol}
+			<if test="seq != null and seq != ''">
+				AND seq = #{seq}
+			</if>
+	</select>
+	
+	<update id="mergePhoever" parameterType="com.main.admin.site.web.vo.PhoeverVo">
+		/* ProgramID=com.main.admin.site.service.impl.PhoeverMapper.mergePhoever */
+        <![CDATA[
+        	INSERT INTO 
+        		tb_social (
+        			seq,
+					title, 
+					pc_thimg,
+				    pc_alt, 
+				    pc_contents, 
+				    m_thimg,
+				    m_alt, 
+				    m_contents,
+				    regid, 
+				    regdt,
+				    modid, 
+				    moddt,
+				    hitcnt,
+				    useyn,
+				    tb_socialcol
+                )
+                VALUES (
+                	#{seq},
+                	#{title},
+                	#{pc_img_txt},
+                	#{pc_alt},
+                	#{pc_contents},
+                	#{m_img_txt},
+                	#{m_alt},
+                	#{m_contents},
+                	#{regid},
+                	now(),
+                	#{regid},
+                	now(),
+                	0,
+                	#{useyn},
+                	#{tb_socialcol}
+                )
+                ON DUPLICATE KEY UPDATE
+                	title=#{title},
+                	pc_thimg=#{pc_img_txt},
+                	pc_alt=#{pc_alt},
+                	pc_contents=#{pc_contents},
+                	m_thimg=#{m_img_txt},
+                	m_alt=#{m_alt},
+                	m_contents=#{m_contents},
+                	modid=#{modid},
+                	moddt=now(),
+                	hitcnt=#{hitcnt},
+                	useyn=#{useyn},
+                	tb_socialcol=#{tb_socialcol}
+        ]]>
+    </update>
+    
+    <delete id="deletePhoever" parameterType="hashmap">
+    	/* ProgramID=com.main.admin.site.service.impl.PhoeverMapper.deletePhoever */
+        <![CDATA[
+        	DELETE 
+		  	FROM tb_social
+		  	WHERE seq = #{seq}
+		  	AND tb_socialcol = #{tb_socialcol}
+		]]>
+	</delete>
+    
+    <select id="nextSeq" parameterType="hashmap" resultType="string">
+		/* ProgramID=com.main.admin.site.service.impl.PhoeverMapper.nextSeq */
+        <![CDATA[
+	        SELECT * 
+	        FROM (
+		        SELECT MAX(seq)+1 
+		        FROM tb_social
+		        WHERE tb_socialcol = #{tb_socialcol}
+	        ) tb
+		]]>
+	</select>
+	
+	<update id="updateUseYn" parameterType="hashmap">
+		/* ProgramID=com.main.admin.site.service.impl.PhoeverMapper.updateUseYn */
+        <![CDATA[
+        	UPDATE tb_social
+        	SET useyn = #{useyn}
+        	WHERE tb_socialcol = #{tb_socialcol}
+        	AND seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+
+</mapper>

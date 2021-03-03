@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.store.service.impl.StoreMapper">
+
+
+	<sql id="getSearch">
+		<if test="name != null and name != ''">
+			AND name  like CONCAT('%' , #{name} , '%')
+		</if>
+		<if test="en_name != null and en_name != ''">
+			AND en_name  like CONCAT('%' , #{en_name} , '%')
+		</if>
+		<if test="jp_name != null and jp_name != ''">
+			AND jp_name  like CONCAT('%' , #{jp_name} , '%')
+		</if>
+		<if test="addr != null and addr != ''">
+			AND ( oaddr like CONCAT('%' , #{addr} , '%') OR naddr like CONCAT('%' , #{addr} , '%') ) 
+		</if>
+		<if test="enaddr != null and enaddr != ''">
+			AND enaddr like CONCAT('%' , #{enaddr} , '%') 
+		</if>
+		<if test="useyn != null and useyn != ''">
+	        <choose>
+	            <when test="useyn == 0">
+	            </when>
+	            <when test="useyn == 1">
+	            	AND useyn = 'Y'
+	            </when>
+	            <when test="useyn == 2">
+	            	AND useyn = 'N'
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="openstatus != null and openstatus != ''">
+	        <choose>
+	            <when test="openstatus == 0">
+	            </when>
+	            <when test="openstatus == 1">
+	            	AND openstatus = 'N'
+	            </when>
+	            <when test="openstatus == 2">
+	            	AND openstatus = 'Y'
+	            </when>	            	            
+			</choose>
+		</if>
+		<if test="bestcode != null and bestcode != ''">
+			AND option1 LIKE CONCAT('%' , #{bestcode} , '%')
+		</if>
+		<if test="interioryn != null and interioryn != ''">
+			AND interior = 'Y'
+		</if>
+		<if test="opt1 != null and opt1 != ''">
+			AND option1 LIKE CONCAT('%' , #{opt1} , '%')
+		</if>
+		<if test="opt2 != null and opt2 != ''">
+			AND option1 LIKE CONCAT('%' , #{opt2} , '%')
+		</if>
+		<if test="opt3 != null and opt3 != ''">
+			AND option1 LIKE CONCAT('%' , #{opt3} , '%')
+		</if>
+	</sql>	
+
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.store.service.impl.StoreMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_store A 
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.store.service.impl.StoreMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq, 
+				name, en_name, jp_name,
+			    post, oaddr, naddr, daddr, enaddr,
+			    lat, longi,
+			    phone, hp1, hp2, hp3, 
+			    bhour, betc, businfo, busyn, subinfo, subyn,
+			    option1, option2, option3,
+			    interior,  openstatus, opendt,
+			    useyn,
+			    bh1, bh2, bh3, bh4,
+			    f_file1, f_file2, f_file3, f_file4,f_file5, f_file6, f_file7, f_file8,
+			    regid, regdt,
+			    modid, moddt,
+			    case when name = '정자본점' then 1 else 2 end as inteOrder
+			FROM tb_store 
+        ]]>
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+		<if test="interioryn != null and interioryn != ''">
+			ORDER BY inteOrder  ASC , seq DESC
+		</if>
+		<if test="interioryn == null or interioryn == ''">
+			ORDER BY seq DESC
+		</if>
+		) A  ) T
+		LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectPaging2" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.store.service.impl.StoreMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq, 
+				name, en_name,jp_name,
+			    post, oaddr, naddr, daddr, enaddr,
+			    lat, longi,
+			    phone, hp1, hp2, hp3, 
+			    bhour, betc, businfo, busyn, subinfo, subyn,
+			    option1, option2, option3,
+			    interior,  openstatus, opendt,
+			    useyn,
+			    bh1, bh2, bh3, bh4,
+			    f_file1, f_file2, f_file3, f_file4,f_file5, f_file6, f_file7, f_file8,
+			    regid, regdt,
+			    modid, moddt
+			FROM tb_store 
+        ]]>
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY name ASC
+		) A  ) T
+	</select>
+		
+	
+	<select id="selectView" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			seq, name, en_name, jp_name,
+		    post, oaddr, naddr, daddr, enaddr,
+		    lat, longi,
+		    phone, hp1, hp2, hp3,
+		    bhour, bhours, bh1, bh2, bhoure, bh3, bh4, 
+		    betc, businfo, busyn, subinfo, subyn,
+		    option1, option2, option3,
+		    interior,  openstatus, opendt,
+		    useyn,
+		    f_file1, f_file2, f_file3, f_file4,f_file5, f_file6, f_file7, f_file8,
+		    regid, regdt,
+			modid, moddt
+		FROM tb_store
+		WHERE seq = #{seq}
+	</select>
+	
+	<insert id="insert" parameterType="hashmap">
+		<selectKey resultType="long" order="AFTER" keyProperty="seq">
+	        SELECT LAST_INSERT_ID() as seq
+	    </selectKey>
+		Insert into tb_store ( name, en_name, jp_name, post, oaddr, naddr, daddr, enaddr,
+		    lat, longi, phone, hp1, hp2, hp3, bhour, bhours, bh1, bh2, bhoure, bh3, bh4, betc, businfo, busyn, subinfo, subyn, option1, option2, option3,
+		    interior,  openstatus, opendt, useyn, f_file1, f_file2, f_file3, f_file4,f_file5, f_file6, f_file7, f_file8, regid, regdt )
+		    values
+		    ( #{name},#{en_name},  #{jp_name}, #{post},#{oaddr},#{naddr},#{daddr},#{enaddr}, 
+		    #{lat},#{longi},#{phone},#{hp1},#{hp2},#{hp3}, #{bhour},#{bhours},#{bh1},#{bh2},#{bhoure},#{bh3},#{bh4},#{betc},#{businfo},#{busyn}, #{subinfo}, #{subyn}, #{option1},#{option2},#{option3},
+		    #{interior},#{openstatus},#{opendt},#{useyn},#{f_file1},#{f_file2},#{f_file3},#{f_file4},#{f_file5},#{f_file6},#{f_file7},#{f_file8},#{regid},now())
+	</insert>
+	
+	<update id="update" parameterType="hashmap">
+		Update tb_store set
+			name = #{name}, 
+			en_name = #{en_name},
+			jp_name = #{jp_name},
+		    post = #{post}, 
+		    oaddr = #{oaddr}, 
+		    naddr = #{naddr}, 
+		    daddr = #{daddr}, 
+		    enaddr = #{enaddr},
+		    lat = #{lat}, 
+		    longi = #{longi},
+		    phone = #{phone},
+		    hp1 = #{hp1}, 
+		    hp2 = #{hp2}, 
+		    hp3 = #{hp3},
+		    bhour = #{bhour},
+		    bhours = #{bhours}, 
+		    bh1 = #{bh1}, 
+		    bh2 = #{bh2}, 
+		    bhoure = #{bhoure}, 
+		    bh3 = #{bh3}, 
+		    bh4 = #{bh4},
+		    betc = #{betc}, 
+		    businfo = #{businfo}, 
+		    busyn = #{busyn},
+		    subinfo = #{subinfo},
+		    subyn = #{subyn},
+		    option1 = #{option1}, 
+		    option2 = #{option2}, 
+		    option3 = #{option3},
+		    interior = #{interior},  
+		    openstatus = #{openstatus}, 
+		    opendt = #{opendt},
+		    useyn = #{useyn},
+			<if test="f_file1 != null and f_file1 != ''">
+			f_file1 = #{f_file1}, 
+			</if>
+			<if test="file01_del != null and file01_del != ''">
+			f_file1 = '',
+			</if>
+			<if test="f_file2 != null and f_file2 != ''">
+			f_file2 = #{f_file2}, 
+			</if>
+			<if test="file02_del != null and file02_del != ''">
+			f_file2 = '',
+			</if>
+			<if test="f_file3 != null and f_file3 != ''">
+			f_file3 = #{f_file3}, 
+			</if>
+			<if test="file03_del != null and file03_del != ''">
+			f_file3 = '',
+			</if>
+			<if test="f_file4 != null and f_file4 != ''">
+			f_file4 = #{f_file4}, 
+			</if>
+			<if test="file04_del != null and file04_del != ''">
+			f_file4 = '',
+			</if>
+			<if test="f_file5 != null and f_file5 != ''">
+			f_file5 = #{f_file5}, 
+			</if>
+			<if test="file05_del != null and file05_del != ''">
+			f_file5 = '',
+			</if>
+			
+			<if test="f_file6 != null and f_file6 != ''">
+			f_file6 = #{f_file6}, 
+			</if>
+			<if test="file06_del != null and file06_del != ''">
+			f_file6 = '',
+			</if>
+			<if test="f_file7 != null and f_file7 != ''">
+			f_file7 = #{f_file7}, 
+			</if>
+			<if test="file07_del != null and file07_del != ''">
+			f_file7 = '',
+			</if>
+			<if test="f_file8 != null and f_file8 != ''">
+			f_file8 = #{f_file8}, 
+			</if>
+			<if test="file08_del != null and file08_del != ''">
+			f_file8 = '',
+			</if>
+			
+		    modid = #{modid}, 
+		    moddt = now()
+		where 
+			seq = #{seq}
+	</update>
+	
+	<delete id="delete" parameterType="hashmap">
+		Delete from tb_store
+		Where seq = #{seq}
+	</delete>
+	
+	
+	
+	<select id="selectInfo" parameterType="hashmap" resultType="hashmap">
+		select seq, useq, info, infovalue
+		from tb_storeinfo
+		where
+			useq = #{useq}
+	</select>
+	<insert id="insertinfo" parameterType="hashmap">
+		insert into tb_storeinfo
+		( useq, info, infovalue ) values ( #{useq}, #{info}, #{infovalue} )
+	</insert>
+	<update id="updateinfo" parameterType="hashmap">
+		update tb_storeinfo set
+			info = #{info},
+			infovalue = #{infovalue}
+		where
+			seq = #{infoseq}
+	</update>
+	
+	<select id="selectoption" parameterType="hashmap" resultType="hashmap">
+		select seq, useq, options, optionvalue
+		from tb_storeoption
+		where
+			useq = #{useq}
+	</select>
+	<insert id="insertoption" parameterType="hashmap">
+		insert into tb_storeoption
+		( useq, options, optionvalue ) values ( #{useq}, #{options}, #{optionvalue} )
+	</insert>
+	<update id="updateoption" parameterType="hashmap">
+		update tb_storeoption set
+			options = #{options},
+			optionvalue = #{optionvalue}
+		where
+			seq = #{optionseq}
+	</update>
+	
+	<update id="updateUseYn" parameterType="hashmap">
+        <![CDATA[
+        	UPDATE tb_store
+        	SET useyn = #{useyn}
+        	WHERE seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+    
+    <select id="selectExcel" parameterType="hashmap" resultType="hashmap">
+			SELECT seq, 
+				name, en_name,
+			    post, oaddr, naddr, daddr, enaddr,
+			    lat, longi,
+			    phone, hp1, hp2, hp3, 
+			    bhour, betc, businfo, busyn, subinfo, subyn,
+			    option1, option2, option3,
+			    interior,  openstatus, opendt,
+			    useyn,
+			    bh1, bh2, bh3, bh4,
+			    f_file1, f_file2, f_file3, f_file4,f_file5,f_file6, f_file7, f_file8,
+			    regid, regdt,
+			    modid, moddt
+			FROM tb_store 
+	</select>
+	
+	
+</mapper>

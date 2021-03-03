@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.comm.service.impl.CodeMapper">
+
+	<sql id="getSearch">
+		<if test="code_type == 'code'"> 
+        	AND LENGTH(code) = 3
+        </if>
+        <if test="code_type == 'sub_code'"> 
+        	AND LENGTH(code) = 6
+        	AND code LIKE CONCAT(SUBSTRING(#{code}, 1, 3), '%')
+	        AND code != SUBSTRING(#{code}, 1, 3)
+        </if>
+        <if test="code_type == 'sub_sub_code'"> 
+        	AND LENGTH(code) = 9
+        	AND code LIKE CONCAT(SUBSTRING(#{code}, 1, 6), '%')
+	        AND code != SUBSTRING(#{code}, 1, 6)
+        </if>
+	</sql>
+
+	<select id="selectMenuNmFirst" parameterType="codeVO"  resultType="codeVO" >
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectMenuNmFirst */
+		SELECT CODE AS menuCd, menu_name AS menuNm, link
+		FROM tb_menu_mgt
+		WHERE 
+			LENGTH(code) = 3
+			AND useyn = 'Y'
+		ORDER BY ordr ASC
+	</select>
+	
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_code_mgt A
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+					(SELECT code FROM tb_code_mgt WHERE code = SUBSTRING(#{code}, 1, 3) LIMIT 1) p_pcode,
+					(SELECT name FROM tb_code_mgt WHERE code = SUBSTRING(#{code}, 1, 3) LIMIT 1) p_pname,
+					(SELECT code FROM tb_code_mgt WHERE code = SUBSTRING(#{code}, 1, 6) LIMIT 1) pcode,
+					(SELECT name FROM tb_code_mgt WHERE code = SUBSTRING(#{code}, 1, 6) LIMIT 1) pname,
+					code,
+					name,
+					ordr,
+					useyn,
+					(SELECT cast(MAX(code) + 1 as char(9)) FROM tb_code_mgt
+		]]>
+					<where>
+						1 = 1
+						<include refid="getSearch" />
+					</where>
+					) AS nextcode
+			FROM tb_code_mgt
+        <where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+		ORDER BY ordr ASC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="nextSeq" parameterType="hashmap" resultType="string">
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.nextSeq */
+        <![CDATA[
+	        SELECT * 
+	        FROM (
+		        SELECT MAX(seq)+1 
+		        FROM tb_code_mgt
+	        ) tb
+		]]>
+	</select>
+	
+	<update id="mergeCode" parameterType="com.main.admin.comm.web.vo.CodeVo">
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.mergeCode */
+        <![CDATA[
+        	INSERT INTO 
+        		tb_code_mgt (
+        			seq,
+            		code,
+            		name,
+                	ordr,
+                	useyn
+                )
+                VALUES (
+                	#{seq},
+                	#{code},
+                	#{code_name},
+                	#{ordr},
+                	#{useyn}
+                )
+                ON DUPLICATE KEY UPDATE
+            		code=#{code},
+                	name=#{code_name},
+                	ordr=#{ordr},
+                	useyn=#{useyn}
+        ]]>
+    </update>
+    
+    <update id="updateSortingCode" parameterType="java.util.List">
+    	/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.updateSortingCode */
+    	<![CDATA[
+		    UPDATE tb_code_mgt 
+		    SET ordr = 
+		    CASE
+	    ]]>
+		<foreach collection="sortingArr" item="item" index="index">
+			WHEN seq = #{item} THEN (#{index}+1) 
+		</foreach>
+			END
+			WHERE seq IN 
+			<foreach collection="sortingArr" item="item" index="index" separator="," open="(" close=")"> 
+				${item}
+	        </foreach>  
+	</update>
+	
+	<select id="selectChildCnt" parameterType="hashmap" resultType="int">
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectChildCnt */ 
+		SELECT COUNT(*)
+		FROM tb_code_mgt
+		WHERE code LIKE CONCAT(
+		(
+		SELECT
+			code
+		FROM tb_code_mgt
+		WHERE seq = #{seq}
+		), '%')
+		AND 
+		code != (
+		SELECT
+			code
+		FROM tb_code_mgt
+		WHERE seq = #{seq}
+		)
+	</select>
+	
+	<delete id="deleteCode" parameterType="hashmap">
+    	/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.deleteCode */
+        <![CDATA[
+        	DELETE 
+		  	FROM tb_code_mgt
+		  	WHERE seq = #{seq}
+		]]>
+	</delete>
+	
+	<select id="duplicateCode" parameterType="hashmap" resultType="int">
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.dueplicateCode */ 
+		SELECT COUNT(*)
+		FROM tb_code_mgt
+		WHERE code = #{code}
+	</select>
+	
+	<select id="selectCodeSub" parameterType="codeVO"  resultType="codeVO" >
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectCodeSub */
+		<![CDATA[
+		SELECT			
+			 code,
+			 name,
+			 (SELECT seq FROM tb_product WHERE kr_code = tb_code_mgt.code LIMIT 1) as krmenucode,
+			 (SELECT seq FROM tb_product WHERE en_code = tb_code_mgt.code LIMIT 1) as enmenucode,
+			 (SELECT seq FROM tb_product WHERE jp_code = tb_code_mgt.code LIMIT 1) as jpmenucode
+		FROM tb_code_mgt 
+		WHERE 
+			LENGTH(code) =  6
+			AND SUBSTR(code, 1, 3) = #{code}
+			AND useyn = 'Y'
+		ORDER BY ordr ASC
+		]]>
+	</select>	
+	
+	<select id="selectCodeSubSub" parameterType="codeVO" resultType="codeVO">
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectCodeSubSub */
+		<![CDATA[
+		SELECT
+			code,
+			name,
+			(SELECT seq FROM tb_product WHERE kr_code = tb_code_mgt.code LIMIT 1) as krmenucode,
+			(SELECT seq FROM tb_product WHERE en_code = tb_code_mgt.code LIMIT 1) as enmenucode,
+			(SELECT seq FROM tb_product WHERE jp_code = tb_code_mgt.code LIMIT 1) as jpmenucode
+		FROM tb_code_mgt
+		WHERE
+			LENGTH(code) = 9
+	       	AND SUBSTR(code, 1, 6) = #{code}
+	       	AND useyn = 'Y'
+		ORDER BY ordr ASC
+		]]>
+	</select>
+
+	<select id="selectRedCodeSub" parameterType="codeVO"  resultType="codeVO" >
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectCodeSub */
+		<![CDATA[
+		SELECT			
+			 code,
+			 name,
+			 (SELECT seq FROM tb_product_red WHERE kr_code = tb_code_mgt.code LIMIT 1) as krmenucode,
+			 (SELECT seq FROM tb_product_red WHERE en_code = tb_code_mgt.code LIMIT 1) as enmenucode,
+			 (SELECT seq FROM tb_product_red WHERE jp_code = tb_code_mgt.code LIMIT 1) as jpmenucode
+		FROM tb_code_mgt 
+		WHERE 
+			LENGTH(code) =  6
+			AND SUBSTR(code, 1, 3) = #{code}
+			AND useyn = 'Y'
+		ORDER BY ordr ASC
+		]]>
+	</select>	
+	
+	<select id="selectRedCodeSubSub" parameterType="codeVO" resultType="codeVO">
+		/* ProgramID=com.main.admin.comm.service.impl.CodeMapper.selectCodeSubSub */
+		<![CDATA[
+		SELECT
+			code,
+			name,
+			(SELECT seq FROM tb_product_red WHERE kr_code = tb_code_mgt.code LIMIT 1) as krmenucode,
+			(SELECT seq FROM tb_product_red WHERE en_code = tb_code_mgt.code LIMIT 1) as enmenucode,
+			(SELECT seq FROM tb_product_red WHERE jp_code = tb_code_mgt.code LIMIT 1) as jpmenucode
+		FROM tb_code_mgt
+		WHERE
+			LENGTH(code) = 9
+	       	AND SUBSTR(code, 1, 6) = #{code}
+	       	AND useyn = 'Y'
+		ORDER BY ordr ASC
+		]]>
+	</select>
+
+</mapper>

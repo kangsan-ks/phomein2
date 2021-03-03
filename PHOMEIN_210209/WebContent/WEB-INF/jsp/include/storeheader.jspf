@@ -1,0 +1,15 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/jsp/include/declare.jspf" %>
+		<section class="header-wrap">
+			<div class="inner">
+				<h1><a href="/store/intranet/board_list.do" id="mainUrl"><img src="/asset/images/common/logo2.png" alt="관리자"></a></h1>
+				<ul class="global-menu">
+					<li class="user-name"><p class="">${storeSession.name} <em>[${storeSession.adminid}]</em></p></li>
+					<!-- <li class="user-info"><a href="#">내정보</a></li> -->
+					<li class="btn-logout"><a href="/store/logout.do">로그아웃</a></li>
+				</ul>
+			</div>
+			<!-- ▼▼▼ 20190502 추가 ▼▼▼ -->
+			<button class="mobile-menu"><span><span></span><span></span><span></span><span></span></span></button>
+			<!-- ▲▲▲ 20190502 추가 끝 ▲▲▲ -->
+		</section>

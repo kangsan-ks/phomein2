@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.main.admin.site.service.impl.InterviewMapper">
+	
+	<sql id="getSearch">
+		<if test="search_store != null and search_store != ''">
+			AND (store LIKE CONCAT('%' , #{search_store} , '%'))
+		</if>
+		<!--  키워드 검색  -->
+		<if test="search_useyn != null and search_useyn != ''">
+	        <choose>
+	            <when test="search_useyn == 0">
+	            </when>
+	            <when test="search_useyn == 1">
+	            	AND useyn = 'Y'
+	            </when>
+	            <when test="search_useyn == 2">
+	            	AND useyn = 'N'
+	            </when>	            	            
+			</choose>
+		</if>
+	</sql>	
+	
+	<select id="selectTotCnt" parameterType="hashmap" resultType="int">
+		 /* ProgramID=com.main.admin.site.service.impl.InterviewMapper.selectTotCnt */ 
+		SELECT
+			COUNT(A.seq) AS totCnt
+		FROM tb_interview A 
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>
+	</select>
+
+	<select id="selectPaging" parameterType="hashmap" resultType="hashmap">
+		 /* ProgramID=com.main.admin.site.service.impl.InterviewMapper.selectPaging */
+		SELECT T.* FROM (SELECT A.* FROM ( 
+        <![CDATA[
+			SELECT seq,
+					store,
+					title, 
+					main_thimg,
+					pc_thimg,
+				    pc_alt, 
+				    pc_contents, 
+				    m_thimg,
+				    m_alt, 
+				    m_contents,
+				    regid, 
+				    regdt,
+				    modid, 
+				    moddt,
+				    hitcnt,
+				    useyn
+			FROM tb_interview
+        ]]>
+		<where>
+			1 = 1
+			<include refid="getSearch" />
+		</where>        
+		ORDER BY seq DESC
+		) A  ) T  LIMIT  #{startCount}, #{pageUnit}
+	</select>
+	
+	<select id="selectInterviewView" parameterType="hashmap" resultType="hashmap">
+		/* ProgramID=com.main.admin.site.service.impl.InterviewMapper.selectInterviewView */
+        <![CDATA[
+	        SELECT seq,
+	        		store,
+					title, 
+					main_thimg,
+					pc_thimg,
+				    pc_alt, 
+				    pc_contents, 
+				    m_thimg,
+				    m_alt, 
+				    m_contents,
+				    regid, 
+				    regdt,
+				    modid, 
+				    moddt,
+				    hitcnt,
+				    useyn
+				FROM tb_interview
+		]]>
+			<if test="seq != null and seq != ''">
+				WHERE seq = #{seq}
+			</if>
+	</select>
+	
+	<update id="mergeInterview" parameterType="com.main.admin.site.web.vo.InterviewVo">
+		/* ProgramID=com.main.admin.site.service.impl.SiteMapper.mergeInterview */
+        <![CDATA[
+        	INSERT INTO 
+        		tb_interview (
+        			seq,
+        			store,
+					title, 
+					main_thimg,
+					pc_thimg,
+				    pc_alt, 
+				    pc_contents, 
+				    m_thimg,
+				    m_alt, 
+				    m_contents,
+				    regid, 
+				    regdt,
+				    modid, 
+				    moddt,
+				    hitcnt,
+				    useyn
+                )
+                VALUES (
+                	#{seq},
+                	#{store},
+                	#{title},
+                	#{main_img_txt},
+                	#{pc_img_txt},
+                	#{pc_alt},
+                	#{pc_contents},
+                	#{m_img_txt},
+                	#{m_alt},
+                	#{m_contents},
+                	#{regid},
+                	now(),
+                	#{regid},
+                	now(),
+                	0,
+                	#{useyn}
+                )
+                ON DUPLICATE KEY UPDATE
+                	store=#{store},
+                	title=#{title},
+                	main_thimg=#{main_img_txt},
+                	pc_thimg=#{pc_img_txt},
+                	pc_alt=#{pc_alt},
+                	pc_contents=#{pc_contents},
+                	m_thimg=#{m_img_txt},
+                	m_alt=#{m_alt},
+                	m_contents=#{m_contents},
+                	modid=#{modid},
+                	moddt=now(),
+                	hitcnt=#{hitcnt},
+                	useyn=#{useyn}
+        ]]>
+    </update>
+    
+    <delete id="deleteInterview" parameterType="hashmap">
+    	/* ProgramID=com.main.admin.site.service.impl.InterviewMapper.deleteInterview */
+        <![CDATA[
+        	DELETE 
+		  	FROM tb_interview
+		  	WHERE seq = #{seq}
+		]]>
+	</delete>
+    
+    <select id="nextSeq" parameterType="hashmap" resultType="string">
+		/* ProgramID=com.main.admin.site.service.impl.InterviewMapper.nextSeq */
+        <![CDATA[
+	        SELECT * 
+	        FROM (
+		        SELECT MAX(seq)+1 
+		        FROM tb_interview
+	        ) tb
+		]]>
+	</select>
+	
+	<update id="updateUseYn" parameterType="hashmap">
+		/* ProgramID=com.main.admin.site.service.impl.InterviewMapper.updateUseYn */
+        <![CDATA[
+        	UPDATE tb_interview
+        	SET useyn = #{useyn}
+        	WHERE seq IN
+        ]]>
+        <foreach item="item" index="index" collection="checkedSeqArr"
+			open="(" separator="," close=")">
+		    #{item}
+		</foreach>
+    </update>
+
+</mapper>
