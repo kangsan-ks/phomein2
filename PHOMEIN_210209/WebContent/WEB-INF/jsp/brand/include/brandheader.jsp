@@ -101,7 +101,7 @@
 					<a href="/company/franchisee/terms.do" target="_self">가맹문의</a>
 					<%-- <a href="/company/main/main.do" target="_self">기업 사이트</a> --%>
 				</div>
-				<form action="/brand/community/search" name="search_all" id="header_s_form">
+				<form action="/brand/community/search_list.do" name="search_all" id="header_s_form">
 					<input type="text" placeholder="search" name="search_key" />
 					<button type="submit"></button>
 				</form>

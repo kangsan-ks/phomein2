@@ -34,9 +34,22 @@ public class BrandCommunityController extends GOdukAbstractController{
 
 	private final String NAMESPACE = "brand/community/";
 	
+	private final String M_NAMESPACE = "mbrand/community/";
+	
 	@Resource(name = "boardService")
 	private BoardService boardService;
 
+	@RequestMapping(value = "search_list.do", method = { RequestMethod.GET, RequestMethod.POST })
+	public String search(@RequestParam Map param, HttpSession session, ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) {
+		String deviceType = getDeviceType(request);
+
+		if(!deviceType.equals("normal")){
+			return M_NAMESPACE + "search_list";
+		}
+		return NAMESPACE + "search_list";
+	}
+	
 	// TODO /brand/community/{boardType}/community_list.do
 	@RequestMapping(value = "{boardType}/community_list.do" , method = {RequestMethod.GET, RequestMethod.POST}) 
 	public String community_list(
@@ -206,6 +219,24 @@ public class BrandCommunityController extends GOdukAbstractController{
 		
 		
 		return nameSpace + "community_view";
+	}
+	
+	private String getDeviceType(HttpServletRequest request) {
+		Device device = DeviceUtils.getCurrentDevice(request);
+		if (device == null) {
+			return "deivice is null";
+		}
+
+		String deviceType = "unknown";
+
+		if (device.isNormal()) {
+			deviceType = "normal";
+		} else if (device.isMobile()) {
+			deviceType = "mobile";
+		} else if (device.isTablet()) {
+			deviceType = "tablet";
+		}
+		return deviceType;
 	}
 	
 }
